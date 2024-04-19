@@ -1,10 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Gifts from './components/Gifts';
-import AddEditPerson from './components/AddEditPerson';
+import AddEditProduct from './components/AddEditProduct';
+import AddEditOrder from './components/AddEditOrder';
 import AddEditGift from './components/AddEditGift';
 import FourOhFour from './components/FourOhFour';
-import People from './components/People';
+import Home from './components/Home';
 import Header from './components/Header'
 
 function App() {
@@ -14,16 +15,16 @@ function App() {
     <Header></Header>
       <Routes>
           <Route path='/' element={<Login></Login>}></Route>
-          <Route path='/people' element={<People></People>}></Route>
-          <Route path='people/addPeople' element={<AddEditPerson></AddEditPerson>}></Route>
-          <Route path='/people/:id/addPeople' element={<AddEditPerson></AddEditPerson>}></Route>
-          <Route path='/people/:id/gifts' element={<Gifts></Gifts>}></Route>
-          <Route path='/people/:id/gifts/addGift' element={<AddEditGift></AddEditGift>}></Route>
-          <Route path='/people/:id/gifts/:idGift' element={<AddEditGift></AddEditGift>}></Route>
+          <Route path='/home' element={<Home></Home>}></Route>
+          <Route path='/product/addProduct' element={<AddEditProduct></AddEditProduct>}></Route>
+          <Route path='/product/:id/addProduct' element={<AddEditProduct></AddEditProduct>}></Route>
+          <Route path='/order/addOrder' element={<AddEditOrder></AddEditOrder>}></Route>
+          <Route path='/order/:id/addOrder' element={<AddEditOrder></AddEditOrder>}></Route>
           <Route path='*' element={<FourOhFour></FourOhFour>}></Route>
-          <Route path='/people/*' element={<FourOhFour></FourOhFour>}></Route>
-          <Route path='/people/:id/*' element={<FourOhFour></FourOhFour>}></Route>
-          <Route path='/people/:id/gifts/*' element={<FourOhFour></FourOhFour>}></Route>
+          <Route path='/order/*' element={<FourOhFour></FourOhFour>}></Route>
+          <Route path='/order/:id/*' element={<FourOhFour></FourOhFour>}></Route>
+          <Route path='/product/*' element={<FourOhFour></FourOhFour>}></Route>
+          <Route path='/product/:id/*' element={<FourOhFour></FourOhFour>}></Route>          
           </Routes>
       
     </div>

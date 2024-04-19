@@ -15,23 +15,23 @@ function Login() {
     const urlToken = searchParams.get('token');
     if (urlToken) {
       setToken(urlToken);
-      navigate('/people');
+      navigate('/home');
     }
     // check if token already exists in context
     if (token) {
-      navigate('/people');
+      navigate('/home');
     }
   }, []);
 
 function doLogin() {
-  const redirect = `https://pizzaordenes.netlify.app/`;
-  //const redirect = `http://localhost:5173/`;
+  //const redirect = `https://pizzaordenes.netlify.app/`;
+  const redirect = `http://localhost:5173/`;
   const baseURL = `https://orders-api-dx4t.onrender.com/auth/google?redirect_url=${redirect}`; //callback
 
   location.href = baseURL;
 
   addEventListener('message', async (event) => {
-    if (event.origin === 'https://orders-api-dx4t.onrender.com') {
+    if (event.origin === 'https://giftr.onrender.com') {
       const { token } = event.data;
       sessionStorage.setItem(token);
       navigate(redirect);
