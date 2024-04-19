@@ -1,0 +1,9 @@
+
+form div {
+    margin: 1rem;
+}
+
+.bgForm{
+    background-color: var(--primary-200);
+    border-radius: 50% 20% / 10% 40%;
+}

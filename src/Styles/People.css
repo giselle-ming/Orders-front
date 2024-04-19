@@ -1,0 +1,24 @@
+.list{
+    padding: 0rem;
+}
+
+.cardP{
+    background-color: var(--primary-100);
+    margin-top: 2rem;
+    padding: 0;
+}
+
+.btn{
+    margin: 1rem;
+}
+
+.p-card .p-card-content{
+    padding: 0;
+}
+.cardP:hover{
+    background-color: var(--highlight-bg);
+}
+
+.titlePeople{
+    font-size: 1.25rem;
+}
