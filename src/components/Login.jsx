@@ -45,7 +45,7 @@ function doLogin() {
       <p>Ingresa para continuar</p>
      <div className='google flex justify-content-center align-content-center gap-2 align-items-center'>
       <img src="google-icon.png" alt="google" />
-      <Button label="Google" rounded text onClick={doLogin} />
+      <Button label="Ingresa con Google" rounded text onClick={doLogin} />
       </div>
     </div>
   );
