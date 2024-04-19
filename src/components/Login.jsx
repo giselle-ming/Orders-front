@@ -24,14 +24,14 @@ function Login() {
   }, []);
 
 function doLogin() {
-  //const redirect = `https://giftrapp9022.netlify.app/`;
-  const redirect = `http://localhost:5173/`;
-  const baseURL = `https://giftr.onrender.com/auth/google?redirect_url=${redirect}`; //callback
+  const redirect = `https://pizzaordenes.netlify.app/`;
+  //const redirect = `http://localhost:5173/`;
+  const baseURL = `https://orders-api-dx4t.onrender.com/auth/google?redirect_url=${redirect}`; //callback
 
   location.href = baseURL;
 
   addEventListener('message', async (event) => {
-    if (event.origin === 'https://giftr.onrender.com') {
+    if (event.origin === 'https://orders-api-dx4t.onrender.com') {
       const { token } = event.data;
       sessionStorage.setItem(token);
       navigate(redirect);
