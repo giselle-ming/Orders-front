@@ -24,8 +24,8 @@ function Login() {
   }, []);
 
 function doLogin() {
-  //const redirect = `https://pizzaordenes.netlify.app/`;
-  const redirect = `http://localhost:5173/`;
+  const redirect = `https://pizzaordenes.netlify.app/`;
+  //const redirect = `http://localhost:5173/`;
   const baseURL = `https://orders-api-dx4t.onrender.com/auth/google?redirect_url=${redirect}`; //callback
 
   location.href = baseURL;
