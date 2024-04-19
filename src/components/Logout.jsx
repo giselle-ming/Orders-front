@@ -15,7 +15,7 @@ export default function Logout() {
 
   return (
     <div>
-      <Button icon="pi pi-sign-out" rounded text raised severity="secondary" onClick={doLogout} tooltip="Log out" tooltipOptions={{ position: 'bottom' }}/>
+      <Button icon="pi pi-sign-out" rounded text raised severity="secondary" onClick={doLogout} tooltip="Salir" tooltipOptions={{ position: 'bottom' }}/>
     </div>
   );
 }

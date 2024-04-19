@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from 'primereact/inputtextarea';
 import '../Styles/AddEditPerson.css'
 import "primeicons/primeicons.css"; 
 import 'primeflex/primeflex.css';
@@ -25,6 +26,12 @@ function AddEditPerson() {
   let subtitle = `Edit ${name}`;
   const toast = useRef(null);
 
+  const sizes = [
+  {name: 'Pequeña', value: 'Pequeña'},
+  {name: 'Mediana', value: 'Mediana'},
+  {name: 'Grande', value: 'Grande'}
+];
+
   const accept = () => {
     toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'Person deleted', life: 3000 });
         fetch(url, {
@@ -35,10 +42,10 @@ function AddEditPerson() {
       })
         .then((resp) => {
           if (resp.ok) {
-            console.log('Person deleted successfully');
+            console.log('Orden eliminada exitosamente');
             navigate('/people');
           } else {
-            console.log('Failed to delete person');
+            console.log('Error eliminando orden');
           }
         })
         .catch((error) => {
@@ -68,12 +75,12 @@ function AddEditPerson() {
     })
       .then((resp) => {
         if (resp.ok) {
-          console.log('Person added successfully');
+          console.log('Orden agregada exitosamente');
           setName('');
           setDate(null);
           navigate('/people');
         } else {
-          console.log('Failed to add person');
+          console.log('Error eliminando orden');
         }
       })
       .catch((error) => {
@@ -85,7 +92,7 @@ function AddEditPerson() {
     ev.preventDefault();
     confirmPopup({
             target: event.currentTarget,
-            message: 'Are you sure you want to proceed?',
+            message: 'Seguro que quieres eliminar esta orden?',
             icon: 'pi pi-exclamation-triangle',
             accept,
             reject
@@ -117,7 +124,7 @@ function AddEditPerson() {
     }, [token, navigate, setToken, params.id, params.idGift]);
 
   if (!params.id) {
-    subtitle = `Add Person`
+    subtitle = `Agregar Pizza`
     method = 'POST';
     url = `https://giftr.onrender.com/api/person/`;
   }
@@ -129,16 +136,16 @@ function AddEditPerson() {
       
       <form onSubmit={handleSubmit} className='flex flex-column flex-wrap gap-4 align-content-center justify-content-center align-self-start'>
         <div className="card flex">
-            <div className="flex flex-column gap-2">
-                <label htmlFor="person_name">Name</label>
-                <InputText id="person_name" aria-describedby="person_name-help" value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
+          <div className="flex flex-column gap-2">
+            <label htmlFor="person_name">Nombre de la pizza</label>
+            <InputText id="person_name" aria-describedby="person_name-help" value={name} onChange={(e) => setName(e.target.value)} style={{ width: '300px', height: '40px' }} />
+          </div>
         </div>
-        <div className="card flex justify-content-center">
-            <div className="flex flex-column gap-2">
-          <label htmlFor="birth_date">Birth Date</label>
-            <Calendar value={date} onChange={(e) => setDate(e.value)} showIcon />
-        </div>
+        <div className="card flex">
+          <div className="flex flex-column gap-2">
+            <label htmlFor="person_name">Ingredientes</label>
+            <InputTextarea id="person_name" aria-describedby="person_name-help" value={name} onChange={(e) => setName(e.target.value)} style={{ width: '300px', height: '100px' }} />
+          </div>
         </div>
         <div className='flex justify-content-center gap-4'>
           <Toast ref={toast} />
