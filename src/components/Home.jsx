@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useToken } from '../context/TokenContext';
 import { useNavigate } from 'react-router-dom';
 import CheckToken from '../auth/CheckToken';
@@ -11,6 +12,7 @@ export default function Home() {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
   const [token, setToken] = useToken();
+  const params = useParams();
   const navigate = useNavigate();
 
 const deleteProduct = (id) => {
