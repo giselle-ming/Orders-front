@@ -25,6 +25,35 @@ function AddEditOrder() {
   let subtitle = params.id ? 'Edit Order' : 'Add Order';
   const toast = useRef(null);
 
+  useEffect(() => {
+    if (params.id) {
+      fetch(`${url}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      })
+      .then((resp) => {
+        if (resp.ok) {
+          return resp.json();
+        } else {
+          console.log('Error fetching order');
+        }
+      })
+      .then((data) => {
+        const order = data.data;
+        if (order) {
+          setSelectedProducts(order.products);
+          setTotal(order.total);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
+  }, [params.id, token]);
+
   const accept = () => {
     toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'Order deleted', life: 3000 });
     fetch(url, {
@@ -59,10 +88,6 @@ function AddEditOrder() {
         size: product.size,
         price: product.price
       })),
-      extras: selectedExtras.map(extra => ({
-        name: extra.name,
-        price: extra.price
-      })),
       total: total
       // Add other necessary fields for the order
     };
@@ -79,7 +104,6 @@ function AddEditOrder() {
       if (resp.ok) {
         console.log('Order ' + (params.id ? 'updated' : 'added') + ' successfully');
         setSelectedProducts([]);
-        setSelectedExtras([]);
         setTotal(0); 
         navigate('/home');
       } else {
@@ -112,47 +136,7 @@ function AddEditOrder() {
     }
   };
 
-  useEffect(() => {
-  if (params.id) {
-    fetch(`${url}/${params.id}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((resp) => {
-      if (resp.ok) {
-        return resp.json();
-      } else {
-        console.log('Error fetching order');
-      }
-    })
-    .then((data) => {
-      const order = data.data.find(order => order._id === params.id);
-      if (order) {
-        setSelectedProducts(order.products);
-        setTotal(order.total);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-}, [params.id, token, selectedProducts]);
-
-  useEffect(() => {
-    let totalPrice = 0;
-    selectedProducts.forEach(product => {
-      totalPrice += product.price;
-    });
-    selectedExtras.forEach(extra => {
-      totalPrice += extra.price;
-    });
-    setTotal(totalPrice);
-  }, [selectedProducts, selectedExtras]);
-
-  const handleAddExtra = () => { // Added handleAddExtra function
+  const handleAddExtra = () => { 
     if (selectedExtra) {
       setSelectedExtras(prevState => [...prevState, selectedExtra]);
       setSelectedExtra(null);
@@ -162,7 +146,7 @@ function AddEditOrder() {
   return (
     <>
       <h2>{subtitle}</h2>
-      <div className='bgForm'>
+      <div>
         <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
             <div className="flex flex-column gap-1">
               <label htmlFor="order_products">Pizzas</label>
@@ -183,8 +167,8 @@ function AddEditOrder() {
               />
             </div>
           </div>
-          <div className="card flex">
-            <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
+        <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
+            <div className="flex flex-column gap-1">
               <label htmlFor="order_extras">Extras</label>
               <Dropdown 
                 id="order_extras" 
