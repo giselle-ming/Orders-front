@@ -81,7 +81,7 @@ function AddEditOrder() {
         setSelectedProducts([]);
         setSelectedExtras([]);
         setTotal(0); 
-        navigate('/orders');
+        navigate('/home');
       } else {
         console.log('Error ' + (params.id ? 'updating' : 'adding') + ' order');
       }
@@ -139,7 +139,7 @@ function AddEditOrder() {
       console.error(error);
     });
   }
-}, [params.id, token]);
+}, [params.id, token, selectedProducts]);
 
   useEffect(() => {
     let totalPrice = 0;
@@ -184,7 +184,7 @@ function AddEditOrder() {
             </div>
           </div>
           <div className="card flex">
-            <div className="flex flex-column gap-1">
+            <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
               <label htmlFor="order_extras">Extras</label>
               <Dropdown 
                 id="order_extras" 
