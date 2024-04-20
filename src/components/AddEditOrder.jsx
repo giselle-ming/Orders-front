@@ -134,8 +134,7 @@ function AddEditOrder() {
     <>
       <h2>{subtitle}</h2>
       <div className='bgForm'>
-        <form onSubmit={handleSubmit} className='flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start'>
-          <div className="card flex">
+        <div className="card flex">
             <div className="flex flex-column gap-1">
               <label htmlFor="order_products">Pizzas</label>
               <Dropdown 
@@ -175,6 +174,7 @@ function AddEditOrder() {
               />
             </div>
           </div>
+        <form onSubmit={handleSubmit} className='flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start'>
           <div className="selected-products-table">
             <h3>Factura</h3>
             <table style={{ borderCollapse: 'collapse', width: '100%' }}>
