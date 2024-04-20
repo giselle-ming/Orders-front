@@ -153,13 +153,13 @@ function AddEditProduct() {
         <div className="card flex">
           <div className="flex flex-column gap-1">
             <label htmlFor="product_ingredients">Ingredientes</label>
-            <InputTextarea id="product_ingredients" aria-describedby="product_ingredients-help" value={ingredients} onChange={(e) => setIngredients(e.target.value)} style={{ width: '400px', height: '150px' }} />
+            <InputTextarea id="product_ingredients" value={ingredients} onChange={(e) => setIngredients(e.target.value)} />
           </div>
         </div>
         <div className="card flex">
           <div className="flex flex-column gap-1">
             <label htmlFor="product_size">Tamaño</label>
-            <Dropdown id="product_size" value={size} options={sizes} onChange={(e) => setSize(e.value)} style={{ width: '400px', height: '50px' }} />
+            <Dropdown id="product_size" value={size} options={sizes} onChange={(e) => setSize(e.value)} />
           </div>
         </div>
         <div className="card flex">
