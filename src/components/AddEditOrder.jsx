@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { useToken } from '../context/TokenContext';
@@ -6,17 +6,23 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ConfirmPopup } from 'primereact/confirmpopup';
 import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
+import data from '../data.js';
+import 'primeflex/primeflex.css';  
+import '../Styles/AddEditOrder.css';
 
 function AddEditOrder() {
   const [token, setToken] = useToken();
   const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [price, setPrice] = useState(0);
+  const [selectedExtra, setSelectedExtra] = useState(null); // Corrected variable name
+  const [selectedExtras, setSelectedExtras] = useState([]);
+  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
-  let params = useParams();
-  let url = `https://orders-api-dx4t.onrender.com/api/order/${params.id}`;
-  let method = 'PUT';
-  let subtitle = `Edit Order`;
+  const params = useParams();
+  let url = `https://orders-api-dx4t.onrender.com/api/order/${params.id || ''}`;
+  let method = params.id ? 'PUT' : 'POST';
+  let subtitle = params.id ? 'Edit Order' : 'Add Order';
   const toast = useRef(null);
 
   const accept = () => {
@@ -49,7 +55,8 @@ function AddEditOrder() {
     
     const data = {
       products: selectedProducts,
-      price: price
+      extras: selectedExtras,
+      price: total
     };
 
     fetch(url, {
@@ -62,12 +69,13 @@ function AddEditOrder() {
     })
     .then((resp) => {
       if (resp.ok) {
-        console.log('Order added successfully');
+        console.log('Order ' + (params.id ? 'updated' : 'added') + ' successfully');
         setSelectedProducts([]);
-        setPrice(0);
+        setSelectedExtras([]);
+        setTotal(0); 
         navigate('/orders');
       } else {
-        console.log('Error adding order');
+        console.log('Error ' + (params.id ? 'updating' : 'adding') + ' order');
       }
     })
     .catch((error) => {
@@ -75,78 +83,151 @@ function AddEditOrder() {
     });
   };
 
-  const handleDelete = (ev) => {
+  const handleDelete = (ev, index) => {
     ev.preventDefault();
-    confirmPopup({
-      target: ev.currentTarget,
-      message: 'Are you sure you want to delete this order?',
-      icon: 'pi pi-exclamation-triangle',
-      accept,
-      reject
-    });
+    setSelectedProducts(prevState => prevState.filter((_, i) => i !== index));
+  };
+
+  const handleDeleteExtra = (ev, index) => {
+  ev.preventDefault();
+  setSelectedExtras(prevState => prevState.filter((_, i) => i !== index));
+};
+
+  useEffect(() => {
+    setProducts(data.pizzas.map(product => ({ label: `${product.name} - ${product.size}`, value: product })));
+  }, []);
+
+  const handleAddProduct = () => {
+    if (selectedProduct) {
+      setSelectedProducts(prevState => [...prevState, selectedProduct]);
+      setSelectedProduct(null);
+    }
   };
 
   useEffect(() => {
-  const url = `https://orders-api-dx4t.onrender.com/api/product`;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json'
-      }
-    })
-    .then((resp) => {
-      if (resp.status === 401) throw new Error('Unauthorized access to API.');
-      if (!resp.ok) throw new Error('Invalid response.');
-      return resp.json();
-    })
-    .then((data) => {
-      const formattedProducts = data.data.map(product => ({
-        label: product.name,
-        value: product._id
-      }));
-      setProducts(formattedProducts);
-    })
-    .catch((error) => {
-      console.warn(error.message);
+    let totalPrice = 0;
+    selectedProducts.forEach(product => {
+      totalPrice += product.price;
     });
-}, [token, navigate, setToken]);
+    selectedExtras.forEach(extra => {
+      totalPrice += extra.price;
+    });
+    setTotal(totalPrice);
+  }, [selectedProducts, selectedExtras]);
 
-  if (!params.id) {
-    subtitle = `Add Order`
-    method = 'POST';
-    url = `https://orders-api-dx4t.onrender.com/api/order/`;
-  }
+  const handleAddExtra = () => { // Added handleAddExtra function
+    if (selectedExtra) {
+      setSelectedExtras(prevState => [...prevState, selectedExtra]);
+      setSelectedExtra(null);
+    }
+  };
 
   return (
     <>
-    <h2>{subtitle}</h2>
-    <div className='bgForm'>
-      
-      <form onSubmit={handleSubmit} className='flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start'>
-        <div className="card flex">
-          <div className="flex flex-column gap-1">
-            <label htmlFor="order_products">Products</label>
-            <Dropdown id="order_products" value={selectedProducts} options={products} onChange={(e) => setSelectedProducts(e.value)} style={{ width: '400px', height: '50px' }} />
+      <h2>{subtitle}</h2>
+      <div className='bgForm'>
+        <form onSubmit={handleSubmit} className='flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start'>
+          <div className="card flex">
+            <div className="flex flex-column gap-1">
+              <label htmlFor="order_products">Pizzas</label>
+              <Dropdown 
+                id="order_products" 
+                value={selectedProduct} 
+                options={products} 
+                onChange={(e) => {
+                  setSelectedProduct(e.value);
+                }} 
+                style={{ width: '400px', height: '50px' }} 
+              />
+              <Button 
+                style={{ width: '400px', height: '50px' }}
+                label="Agregar" 
+                className="p-button-primary" 
+                onClick={handleAddProduct} 
+              />
+            </div>
           </div>
-        </div>
-        <div className="card flex">
-          <div className="flex flex-column gap-1">
-            <label htmlFor="order_price">Price</label>
-            <InputText id="order_price" aria-describedby="order_price-help" value={price} readOnly style={{ width: '400px', height: '50px' }} />
+          <div className="card flex">
+            <div className="flex flex-column gap-1">
+              <label htmlFor="order_extras">Extras</label>
+              <Dropdown 
+                id="order_extras" 
+                value={selectedExtra} 
+                options={data.options.extras.map(extra => ({ label: extra.name, value: extra }))} 
+                onChange={(e) => {
+                  setSelectedExtra(e.value);
+                }} 
+                style={{ width: '400px', height: '50px' }} 
+              />
+              <Button 
+                style={{ width: '400px', height: '50px' }}
+                label="Agregar Extra" 
+                className="p-button-primary" 
+                onClick={handleAddExtra} 
+              />
+            </div>
           </div>
-        </div>
-        <div className='flex justify-content-center gap-2'>
-          <Toast ref={toast} />
-          <ConfirmPopup />
-          {(params.id) && <Button label="Eliminar" className="p-button-danger" icon="pi pi-delete-left" iconPos="right" onClick={handleDelete}/>}
-          <Button label="Guardar" icon="pi pi-check" iconPos="right" severity='success' type="submit" tooltip="Submit order" tooltipOptions={{ position: 'bottom' }} />
-        </div>
-      </form>
-      
-    </div>
+          <div className="selected-products-table">
+  <h3>Factura</h3>
+  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+    <thead>
+      <tr>
+        <th style={{ border: '1px solid black', padding: '10px' }}>Producto</th>
+        <th style={{ border: '1px solid black', padding: '10px' }}>Tamaño</th>
+        <th style={{ border: '1px solid black', padding: '10px' }}>Precio</th>
+        <th style={{ border: '1px solid black', padding: '10px' }}>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {selectedProducts.map((product, index) => (
+        <tr key={index}>
+          <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
+          <td style={{ border: '1px solid black', padding: '10px' }}>{product.size}</td>
+          <td style={{ border: '1px solid black', padding: '10px' }}>{product.price}</td>
+          <td style={{ border: '1px solid black', padding: '10px' }}>
+            <Button 
+              icon="pi pi-trash" 
+              className="p-button-rounded p-button-danger" 
+              onClick={(ev) => handleDelete(ev, index)}
+            />
+          </td>
+        </tr>
+      ))}
+      {selectedExtras.map((extra, index) => (
+        <tr key={index}>
+          <td style={{ border: '1px solid black', padding: '10px' }}>{extra.name}</td>
+          <td style={{ border: '1px solid black', padding: '10px' }}>-</td>
+          <td style={{ border: '1px solid black', padding: '10px' }}>{extra.price}</td>
+          <td style={{ border: '1px solid black', padding: '10px' }}>
+            <Button 
+              icon="pi pi-trash" 
+              className="p-button-rounded p-button-danger" 
+              onClick={(ev) => handleDeleteExtra(ev, index)} // Assuming you'll implement a handleDeleteExtra function
+            />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+          
+          <div className="card flex">
+            <div className="flex flex-column gap-1">
+              <label htmlFor="order_price">Total</label>
+              <InputText id="order_price" aria-describedby="order_price-help" value={total} readOnly style={{ width: '400px', height: '50px' }} />
+            </div>
+          </div>
+          <div className='flex justify-content-center gap-2'>
+            <Toast ref={toast} />
+            <ConfirmPopup />
+            {params.id && <Button label="Eliminar" className="p-button-danger" icon="pi pi-delete-left" iconPos="right" onClick={handleDelete}/>}
+            <Button label="Guardar" icon="pi pi-check" iconPos="right" severity='success' type="submit" tooltip="Submit order" tooltipOptions={{ position: 'bottom' }} />
+          </div>
+        </form>
+      </div>
     </>
   );
 }
 
-export default AddEditOrder
+export default AddEditOrder;
