@@ -87,7 +87,7 @@ function AddEditOrder() {
   };
 
   useEffect(() => {
-    const url = `https://orders-api-dx4t.onrender.com/api/product/`;
+    const url = `https://orders-api-dx4t.onrender.com/api/product`;
     fetch(url, {
       method: 'GET',
       headers: {
