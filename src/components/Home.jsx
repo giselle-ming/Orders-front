@@ -13,6 +13,29 @@ export default function People() {
   const [token, setToken] = useToken();
   const navigate = useNavigate();
 
+  const deleteProduct = (id) => {
+  const url = `https://orders-api-dx4t.onrender.com/api/product/${id}`;
+
+  fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-type': 'application/json'
+    }
+  })
+    .then((resp) => {
+      if (resp.ok) {
+        // Remove the deleted product from the products state
+        setProducts(products.filter(product => product._id !== id));
+      } else {
+        console.log('Error deleting product');
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  };
+
   useEffect(() => {
     const url = `https://orders-api-dx4t.onrender.com/api/order`;
     fetch(url, {
@@ -85,7 +108,7 @@ export default function People() {
                   <p className="m-0 p-0">Ingredientes: {product.ingredients ? product.ingredients.join(', ') : 'N/A'}</p>
                   <p className="m-0 p-0">Price: {Number(product.price).toFixed(2)}</p>
                   <div className='flex gap-4'>
-                    <Button icon='pi pi-user-edit' rounded severity="secondary" raised onClick={(ev) => navigate(`/products/${product._id}/edit`)}/>
+                    <Button icon='pi pi-user-edit' rounded severity="secondary" raised onClick={(ev) => navigate(`/product/${product._id}/edit`)}/>
                     <Button icon='pi pi-trash' className='btn' rounded severity="secondary" raised onClick={(ev) => deleteProduct(product._id)}/>
                   </div>
                 </Card>
