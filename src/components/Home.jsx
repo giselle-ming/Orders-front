@@ -14,7 +14,7 @@ export default function People() {
   const [token, setToken] = useToken();
   const navigate = useNavigate();
 
-  const deleteOrder = (orderId) => {
+    const deleteOrder = (orderId) => {
     const url = `https://orders-api-dx4t.onrender.com/api/order/${orderId}`;
     fetch(url, {
       method: 'DELETE',
@@ -74,17 +74,13 @@ export default function People() {
 
                 return (
                   <Card key={order._id} title={`${order._id} - ${formattedDate}`} className='cardP'>
-                    <p className="m-0 p-0" style={{ fontSize: '1.5em' }}>Total: {order.total}</p>
+                    <p className="m-0 p-0">Total: {order.total}</p>
                     {order.products.map((product, index) => (
                       <p key={index}>{product.name}</p>
                     ))}
                     <div className='flex gap-4'>
-                      <Tooltip target={`#edit-btn-${order._id}`} position="top" content="Editar">
-                        <Button id={`edit-btn-${order._id}`} icon='pi pi-pencil' className='edit-btn' rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/edit`)}/>
-                      </Tooltip>
-                      <Tooltip target={`#delete-btn-${order._id}`} position="top" content="Eliminar">
-                        <Button id={`delete-btn-${order._id}`} icon='pi pi-trash' className='delete-btn' rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
-                      </Tooltip>
+                      <Button icon='pi pi-pencil' rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/edit`)}/>
+                      <Button icon='pi pi-trash' className='btn' rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
                     </div>
                   </Card>
                 );
