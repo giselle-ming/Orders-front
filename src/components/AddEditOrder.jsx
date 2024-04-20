@@ -87,7 +87,7 @@ function AddEditOrder() {
   };
 
   useEffect(() => {
-    const url = `https://orders-api-dx4t.onrender.com/api/product`;
+  const url = `https://orders-api-dx4t.onrender.com/api/product`;
     fetch(url, {
       method: 'GET',
       headers: {
@@ -101,12 +101,16 @@ function AddEditOrder() {
       return resp.json();
     })
     .then((data) => {
-      setProducts(data.data);
+      const formattedProducts = data.data.map(product => ({
+        label: product.name,
+        value: product._id
+      }));
+      setProducts(formattedProducts);
     })
     .catch((error) => {
       console.warn(error.message);
     });
-  }, [token, navigate, setToken]);
+}, [token, navigate, setToken]);
 
   if (!params.id) {
     subtitle = `Add Order`
