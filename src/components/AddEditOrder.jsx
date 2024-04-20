@@ -53,10 +53,18 @@ function AddEditOrder() {
   const handleSubmit = (ev) => {
     ev.preventDefault();
     
-    const data = {
-      products: selectedProducts,
-      extras: selectedExtras,
-      price: total
+    const orderData = {
+      products: selectedProducts.map(product => ({
+        name: product.name,
+        size: product.size,
+        price: product.price
+      })),
+      extras: selectedExtras.map(extra => ({
+        name: extra.name,
+        price: extra.price
+      })),
+      total: total
+      // Add other necessary fields for the order
     };
 
     fetch(url, {
@@ -65,7 +73,7 @@ function AddEditOrder() {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(orderData)
     })
     .then((resp) => {
       if (resp.ok) {
@@ -89,9 +97,9 @@ function AddEditOrder() {
   };
 
   const handleDeleteExtra = (ev, index) => {
-  ev.preventDefault();
-  setSelectedExtras(prevState => prevState.filter((_, i) => i !== index));
-};
+    ev.preventDefault();
+    setSelectedExtras(prevState => prevState.filter((_, i) => i !== index));
+  };
 
   useEffect(() => {
     setProducts(data.pizzas.map(product => ({ label: `${product.name} - ${product.size}`, value: product })));
@@ -168,49 +176,48 @@ function AddEditOrder() {
             </div>
           </div>
           <div className="selected-products-table">
-  <h3>Factura</h3>
-  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-    <thead>
-      <tr>
-        <th style={{ border: '1px solid black', padding: '10px' }}>Producto</th>
-        <th style={{ border: '1px solid black', padding: '10px' }}>Tamaño</th>
-        <th style={{ border: '1px solid black', padding: '10px' }}>Precio</th>
-        <th style={{ border: '1px solid black', padding: '10px' }}>Eliminar</th>
-      </tr>
-    </thead>
-    <tbody>
-      {selectedProducts.map((product, index) => (
-        <tr key={index}>
-          <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
-          <td style={{ border: '1px solid black', padding: '10px' }}>{product.size}</td>
-          <td style={{ border: '1px solid black', padding: '10px' }}>{product.price}</td>
-          <td style={{ border: '1px solid black', padding: '10px' }}>
-            <Button 
-              icon="pi pi-trash" 
-              className="p-button-rounded p-button-danger" 
-              onClick={(ev) => handleDelete(ev, index)}
-            />
-          </td>
-        </tr>
-      ))}
-      {selectedExtras.map((extra, index) => (
-        <tr key={index}>
-          <td style={{ border: '1px solid black', padding: '10px' }}>{extra.name}</td>
-          <td style={{ border: '1px solid black', padding: '10px' }}>-</td>
-          <td style={{ border: '1px solid black', padding: '10px' }}>{extra.price}</td>
-          <td style={{ border: '1px solid black', padding: '10px' }}>
-            <Button 
-              icon="pi pi-trash" 
-              className="p-button-rounded p-button-danger" 
-              onClick={(ev) => handleDeleteExtra(ev, index)} // Assuming you'll implement a handleDeleteExtra function
-            />
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
+            <h3>Factura</h3>
+            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+              <thead>
+                <tr>
+                  <th style={{ border: '1px solid black', padding: '10px' }}>Producto</th>
+                  <th style={{ border: '1px solid black', padding: '10px' }}>Tamaño</th>
+                  <th style={{ border: '1px solid black', padding: '10px' }}>Precio</th>
+                  <th style={{ border: '1px solid black', padding: '10px' }}>Eliminar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedProducts.map((product, index) => (
+                  <tr key={index}>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>{product.size}</td>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>{product.price}</td>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>
+                      <Button 
+                        icon="pi pi-trash" 
+                        className="p-button-rounded p-button-danger" 
+                        onClick={(ev) => handleDelete(ev, index)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+                {selectedExtras.map((extra, index) => (
+                  <tr key={index}>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>{extra.name}</td>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>-</td>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>{extra.price}</td>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>
+                      <Button 
+                        icon="pi pi-trash" 
+                        className="p-button-rounded p-button-danger" 
+                        onClick={(ev) => handleDeleteExtra(ev, index)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           
           <div className="card flex">
             <div className="flex flex-column gap-1">
