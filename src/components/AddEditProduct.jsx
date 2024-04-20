@@ -23,7 +23,7 @@ function AddEditProduct() {
   const [price, setPrice] = useState('');
   const navigate = useNavigate();
   let params = useParams();
-  let url = `https://orders-api-dx4t.onrender.com/api/product`;
+  let url = `https://orders-api-dx4t.onrender.com/api/product/${params.id}`;
   let method = 'PUT';
   let subtitle = `Edit ${name}`;
   const toast = useRef(null);
@@ -66,7 +66,7 @@ function AddEditProduct() {
   
   const data = {
     name: name,
-    ingredients: ingredients,
+    ingredients: ingredients.split(','),
     size: size,
     price: Number(price) // convert price to number
   };
@@ -108,7 +108,6 @@ function AddEditProduct() {
   };
 
   useEffect(() => {
-    if (params.id) {
       const url = `https://orders-api-dx4t.onrender.com/api/product/${params.id}/`;
       fetch(url, {
         method: 'GET',
@@ -131,13 +130,12 @@ function AddEditProduct() {
         .catch((error) => {
           console.warn(error.message);
         });
-    }
-  }, [token, navigate, setToken, params.id]);
+    }, [token, navigate, setToken, params.id]);
 
   if (!params.id) {
     subtitle = `Agregar Producto`
     method = 'POST';
-    url = `https://orders-api-dx4t.onrender.com/api/product`;
+    url = `https://orders-api-dx4t.onrender.com/api/product/`;
   }
 
   return (

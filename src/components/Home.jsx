@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useToken } from '../context/TokenContext';
 import { useNavigate } from 'react-router-dom';
 import CheckToken from '../auth/CheckToken';
@@ -8,37 +7,11 @@ import '../Styles/Home.css'
 import { Card } from 'primereact/card';
 import { Tooltip } from 'primereact/tooltip';
 
-export default function Home() {
+export default function People() {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
   const [token, setToken] = useToken();
-  const params = useParams();
   const navigate = useNavigate();
-
-const deleteProduct = (id) => {
-  if (window.confirm('Are you sure you want to delete this product?')) {
-    const url = `https://orders-api-dx4t.onrender.com/api/product/${id}`;
-
-    fetch(url, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json'
-      }
-    })
-      .then((resp) => {
-        if (resp.ok) {
-          // Remove the deleted product from the products state
-          setProducts(products.filter(product => product._id !== id));
-        } else {
-          console.log('Error deleting product');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-};
 
   useEffect(() => {
     const url = `https://orders-api-dx4t.onrender.com/api/order`;
@@ -77,12 +50,12 @@ const deleteProduct = (id) => {
         return resp.json();
       })
       .then((data) => {
-        setProducts(data.data); // set the list of products
+        setProducts(data.data);
       })
       .catch((error) => {
         console.warn(error.message);
       });
-  }, [token]);
+  }, [token, navigate, setToken]);
 
   return (
     <section>
@@ -112,7 +85,7 @@ const deleteProduct = (id) => {
                   <p className="m-0 p-0">Ingredientes: {product.ingredients ? product.ingredients.join(', ') : 'N/A'}</p>
                   <p className="m-0 p-0">Price: {Number(product.price).toFixed(2)}</p>
                   <div className='flex gap-4'>
-                    <Button icon='pi pi-user-edit' rounded severity="secondary" raised onClick={(ev) => navigate(`/product/${product._id}/edit`)}/>
+                    <Button icon='pi pi-user-edit' rounded severity="secondary" raised onClick={(ev) => navigate(`/products/${product._id}/edit`)}/>
                     <Button icon='pi pi-trash' className='btn' rounded severity="secondary" raised onClick={(ev) => deleteProduct(product._id)}/>
                   </div>
                 </Card>
