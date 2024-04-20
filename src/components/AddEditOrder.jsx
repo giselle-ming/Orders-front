@@ -235,14 +235,32 @@ function AddEditOrder() {
           <div className="card flex">
             <div className="flex flex-column gap-1">
               <label htmlFor="order_price">Total</label>
-              <InputText id="order_price" aria-describedby="order_price-help" value={total} readOnly style={{ width: '400px', height: '50px' }} />
+              <InputText 
+                id="order_price" 
+                aria-describedby="order_price-help" 
+                value={total} 
+                onChange={(e) => setTotal(e.target.value)} // Allow editing of the total
+                style={{ width: '400px', height: '50px' }} 
+              />
             </div>
           </div>
           <div className='flex justify-content-center gap-2'>
             <Toast ref={toast} />
             <ConfirmPopup />
-            {params.id && <Button label="Eliminar" className="p-button-danger" icon="pi pi-delete-left" iconPos="right" onClick={handleDelete}/>}
-            <Button label="Guardar" icon="pi pi-check" iconPos="right" severity='success' type="submit" tooltip="Submit order" tooltipOptions={{ position: 'bottom' }} />
+            <Button 
+              label="Cancelar" 
+              className="p-button-secondary" 
+              onClick={() => navigate('/home')} // Go back to home page
+            />
+            <Button 
+              label="Guardar" 
+              icon="pi pi-check" 
+              iconPos="right" 
+              severity='success' 
+              type="submit" 
+              tooltip="Submit order" 
+              tooltipOptions={{ position: 'bottom' }} 
+            />
           </div>
         </form>
       </div>
