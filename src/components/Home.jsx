@@ -62,9 +62,8 @@ const deleteProduct = (id) => {
       });
   }, [token, navigate, setToken]);
 
-useEffect(() => {
-  if (params.id) {
-    const url = `https://orders-api-dx4t.onrender.com/api/product/${params.id}/`;
+  useEffect(() => {
+    const url = `https://orders-api-dx4t.onrender.com/api/product`;
     fetch(url, {
       method: 'GET',
       headers: {
@@ -78,16 +77,12 @@ useEffect(() => {
         return resp.json();
       })
       .then((data) => {
-        setName(data.data.name);
-        setIngredients(data.data.ingredients); // directly assign ingredients
-        setSize(data.data.size);
-        setPrice(data.data.price.toString()); // convert price to string
+        setProducts(data.data); // set the list of products
       })
       .catch((error) => {
         console.warn(error.message);
       });
-  }
-}, [token, navigate, setToken, params.id]);
+  }, [token]);
 
   return (
     <section>

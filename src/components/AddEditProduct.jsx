@@ -108,6 +108,7 @@ function AddEditProduct() {
   };
 
   useEffect(() => {
+    if (params.id) {
       const url = `https://orders-api-dx4t.onrender.com/api/product/${params.id}/`;
       fetch(url, {
         method: 'GET',
@@ -130,7 +131,8 @@ function AddEditProduct() {
         .catch((error) => {
           console.warn(error.message);
         });
-    }, [token, navigate, setToken, params.id]);
+    }
+  }, [token, navigate, setToken, params.id]);
 
   if (!params.id) {
     subtitle = `Agregar Producto`
