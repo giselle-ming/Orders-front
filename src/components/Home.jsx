@@ -7,7 +7,7 @@ import '../Styles/Home.css'
 import { Card } from 'primereact/card';
 import { Tooltip } from 'primereact/tooltip';
 
-export default function People() {
+export default function Home() {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
   const [token, setToken] = useToken();
@@ -60,8 +60,9 @@ const deleteProduct = (id) => {
       });
   }, [token, navigate, setToken]);
 
-  useEffect(() => {
-    const url = `https://orders-api-dx4t.onrender.com/api/product`;
+useEffect(() => {
+  if (params.id) {
+    const url = `https://orders-api-dx4t.onrender.com/api/product/${params.id}/`;
     fetch(url, {
       method: 'GET',
       headers: {
@@ -75,12 +76,16 @@ const deleteProduct = (id) => {
         return resp.json();
       })
       .then((data) => {
-        setProducts(data.data);
+        setName(data.data.name);
+        setIngredients(data.data.ingredients); // directly assign ingredients
+        setSize(data.data.size);
+        setPrice(data.data.price.toString()); // convert price to string
       })
       .catch((error) => {
         console.warn(error.message);
       });
-  }, [token, navigate, setToken]);
+  }
+}, [token, navigate, setToken, params.id]);
 
   return (
     <section>
