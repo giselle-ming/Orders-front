@@ -23,9 +23,9 @@ function AddEditProduct() {
   const [price, setPrice] = useState('');
   const navigate = useNavigate();
   let params = useParams();
-  let url = params.id ? `https://orders-api-dx4t.onrender.com/api/product/${params.id}` : `https://orders-api-dx4t.onrender.com/api/product/`;
-  let method = params.id ? 'PUT' : 'POST';
-  let subtitle = params.id ? `Edit ${name}` : 'Agregar Producto';
+  let url = `https://orders-api-dx4t.onrender.com/api/product/${params.id}`;
+  let method = 'PUT';
+  let subtitle = `Edit ${name}`;
   const toast = useRef(null);
   const [size, setSize] = useState('No aplica');
 
@@ -61,12 +61,12 @@ function AddEditProduct() {
         // toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
     };
 
-const handleSubmit = (ev) => {
+  const handleSubmit = (ev) => {
   ev.preventDefault();
   
   const data = {
     name: name,
-    ingredients: ingredients, // split ingredients into an array
+    ingredients: ingredients,
     size: size,
     price: Number(price) // convert price to number
   };
@@ -81,14 +81,14 @@ const handleSubmit = (ev) => {
   })
     .then((resp) => {
       if (resp.ok) {
-        console.log('Producto agregado exitosamente');
+        console.log('Product agregada exitosamente');
         setName('');
         setIngredients('');
-        setSize('No aplica'); // reset to default size
+        setSize('');
         setPrice('');
         navigate('/home');
       } else {
-        console.log('Error');
+        console.log('Error eliminando product');
       }
     })
     .catch((error) => {
@@ -123,7 +123,7 @@ const handleSubmit = (ev) => {
         })
         .then((data) => {
           setName(data.data.name);
-          setIngredients(data.data.ingredients); // directly assign ingredients
+          setIngredients(data.data.ingredients.join(','));
           setSize(data.data.size);
           setPrice(data.data.price.toString()); // convert price to string
         })
@@ -153,13 +153,13 @@ const handleSubmit = (ev) => {
         <div className="card flex">
           <div className="flex flex-column gap-1">
             <label htmlFor="product_ingredients">Ingredientes</label>
-            <InputTextarea id="product_ingredients" value={ingredients} onChange={(e) => setIngredients(e.target.value)} />
+            <InputTextarea id="product_ingredients" aria-describedby="product_ingredients-help" value={ingredients} onChange={(e) => setIngredients(e.target.value)} style={{ width: '400px', height: '150px' }} />
           </div>
         </div>
         <div className="card flex">
           <div className="flex flex-column gap-1">
             <label htmlFor="product_size">Tamaño</label>
-            <Dropdown id="product_size" value={size} options={sizes} onChange={(e) => setSize(e.value)} />
+            <Dropdown id="product_size" value={size} options={sizes} onChange={(e) => setSize(e.value)} style={{ width: '400px', height: '50px' }} />
           </div>
         </div>
         <div className="card flex">
