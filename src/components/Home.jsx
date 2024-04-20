@@ -13,28 +13,30 @@ export default function People() {
   const [token, setToken] = useToken();
   const navigate = useNavigate();
 
-  const deleteProduct = (id) => {
-  const url = `https://orders-api-dx4t.onrender.com/api/product/${id}`;
+const deleteProduct = (id) => {
+  if (window.confirm('Are you sure you want to delete this product?')) {
+    const url = `https://orders-api-dx4t.onrender.com/api/product/${id}`;
 
-  fetch(url, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-type': 'application/json'
-    }
-  })
-    .then((resp) => {
-      if (resp.ok) {
-        // Remove the deleted product from the products state
-        setProducts(products.filter(product => product._id !== id));
-      } else {
-        console.log('Error deleting product');
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-type': 'application/json'
       }
     })
-    .catch((error) => {
-      console.error(error);
-    });
-  };
+      .then((resp) => {
+        if (resp.ok) {
+          // Remove the deleted product from the products state
+          setProducts(products.filter(product => product._id !== id));
+        } else {
+          console.log('Error deleting product');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+};
 
   useEffect(() => {
     const url = `https://orders-api-dx4t.onrender.com/api/order`;
