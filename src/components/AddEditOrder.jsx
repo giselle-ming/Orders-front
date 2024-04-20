@@ -113,6 +113,35 @@ function AddEditOrder() {
   };
 
   useEffect(() => {
+  if (params.id) {
+    fetch(`${url}/${params.id}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+    })
+    .then((resp) => {
+      if (resp.ok) {
+        return resp.json();
+      } else {
+        console.log('Error fetching order');
+      }
+    })
+    .then((data) => {
+      const order = data.data.find(order => order._id === params.id);
+      if (order) {
+        setSelectedProducts(order.products);
+        setTotal(order.total);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+}, [params.id, token]);
+
+  useEffect(() => {
     let totalPrice = 0;
     selectedProducts.forEach(product => {
       totalPrice += product.price;
@@ -134,7 +163,7 @@ function AddEditOrder() {
     <>
       <h2>{subtitle}</h2>
       <div className='bgForm'>
-        <div className="card flex">
+        <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
             <div className="flex flex-column gap-1">
               <label htmlFor="order_products">Pizzas</label>
               <Dropdown 
