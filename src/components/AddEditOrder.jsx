@@ -135,8 +135,8 @@ function AddEditOrder() {
         <div className='flex justify-content-center gap-2'>
           <Toast ref={toast} />
           <ConfirmPopup />
-          {(params.id) && <Button label="Delete" className="p-button-danger" icon="pi pi-delete-left" iconPos="right" onClick={handleDelete}/>}
-          <Button label="Save" icon="pi pi-check" iconPos="right" severity='success' type="submit" tooltip="Submit order" tooltipOptions={{ position: 'bottom' }} />
+          {(params.id) && <Button label="Eliminar" className="p-button-danger" icon="pi pi-delete-left" iconPos="right" onClick={handleDelete}/>}
+          <Button label="Guardar" icon="pi pi-check" iconPos="right" severity='success' type="submit" tooltip="Submit order" tooltipOptions={{ position: 'bottom' }} />
         </div>
       </form>
       
