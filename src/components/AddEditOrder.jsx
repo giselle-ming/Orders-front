@@ -36,7 +36,7 @@ function AddEditOrder() {
     .then((resp) => {
       if (resp.ok) {
         console.log('Order deleted successfully');
-        navigate('/orders');
+        navigate('/home');
       } else {
         console.log('Error deleting order');
       }
