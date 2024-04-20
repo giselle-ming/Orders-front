@@ -66,8 +66,8 @@ const handleSubmit = (ev) => {
   
   const data = {
     name: name,
-    ingredients: ingredients, // directly assign ingredients
-    size: size, // directly assign size
+    ingredients: ingredients, // split ingredients into an array
+    size: size,
     price: Number(price) // convert price to number
   };
 
@@ -88,7 +88,7 @@ const handleSubmit = (ev) => {
         setPrice('');
         navigate('/home');
       } else {
-        console.log('Error eliminando product');
+        console.log('Error');
       }
     })
     .catch((error) => {
