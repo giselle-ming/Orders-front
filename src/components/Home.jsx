@@ -79,11 +79,11 @@ export default function People() {
                       <p key={index}>{product.name}</p>
                     ))}
                     <div className='flex gap-4'>
-                      <Tooltip target=".edit-btn" position="top" content="Editar">
-                        <Button icon='pi pi-pencil' className='edit-btn' rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/edit`)}/>
+                      <Tooltip target={`#edit-btn-${order._id}`} position="top" content="Editar">
+                        <Button id={`edit-btn-${order._id}`} icon='pi pi-pencil' className='edit-btn' rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/edit`)}/>
                       </Tooltip>
-                      <Tooltip target=".delete-btn" position="top" content="Eliminar">
-                        <Button icon='pi pi-trash' className='delete-btn' rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
+                      <Tooltip target={`#delete-btn-${order._id}`} position="top" content="Eliminar">
+                        <Button id={`delete-btn-${order._id}`} icon='pi pi-trash' className='delete-btn' rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
                       </Tooltip>
                     </div>
                   </Card>
