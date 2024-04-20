@@ -22,9 +22,9 @@ function App() {
           <Route path='/order/:id/edit' element={<AddEditOrder></AddEditOrder>}></Route>
           <Route path='*' element={<FourOhFour></FourOhFour>}></Route>
           <Route path='/order/*' element={<FourOhFour></FourOhFour>}></Route>
-          <Route path='/order/:id/*' element={<FourOhFour></FourOhFour>}></Route>
+          <Route path='/order/:id/edit/*' element={<FourOhFour></FourOhFour>}></Route>
           <Route path='/product/*' element={<FourOhFour></FourOhFour>}></Route>
-          <Route path='/product/:id/*' element={<FourOhFour></FourOhFour>}></Route>          
+          <Route path='/product/:id/edit/*' element={<FourOhFour></FourOhFour>}></Route>          
       </Routes>
       
     </div>
