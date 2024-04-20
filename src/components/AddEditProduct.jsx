@@ -66,7 +66,7 @@ function AddEditProduct() {
   
   const data = {
     name: name,
-    ingredients: ingredients.split(','),
+    ingredients: ingredients.split(',').map(ingredient => ingredient.trim()), // convert ingredients to array
     size: size,
     price: Number(price) // convert price to number
   };
@@ -81,7 +81,7 @@ function AddEditProduct() {
   })
     .then((resp) => {
       if (resp.ok) {
-        console.log('Product agregada exitosamente');
+        console.log('Producto agregado exitosamente');
         setName('');
         setIngredients('');
         setSize('');
