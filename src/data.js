@@ -455,22 +455,27 @@ const data = {
     extras: [
       {
         name: "Adicional Tomate",
+        size: "N/A",
         price: 1000,
       },
       {
         name: "Adicional Cebolla",
+        size: "N/A",
         price: 1000,
       },
       {
         name: "Adicional Pimiento",
+        size: "N/A",
         price: 1000,
       },
       {
         name: "Champiñones Laminados",
+        size: "N/A",
         price: 1000,
       },
       {
         name: "Adicional Aceitunas",
+        size: "N/A",
         price: 1000,
       },
       {
@@ -478,47 +483,58 @@ const data = {
         price: 1000,
       },
       {
-        name: "Adicional Piña 🍍",
+        name: "Adicional Piña",
+        size: "N/A",
         price: 1000,
       },
       {
         name: "Adicional Jalapeño",
+        size: "N/A",
         price: 1000,
       },
       {
         name: "Adicional Pepperoni",
+        size: "N/A",
         price: 1500,
       },
       {
         name: "Adicional Jamón",
+        size: "N/A",
         price: 1500,
       },
       {
         name: "Adicional Tocino",
+        size: "N/A",
         price: 1500,
       },
       {
         name: "Adicional Chorizo",
+        size: "N/A",
         price: 1500,
       },
       {
         name: "Adicional Choricillo",
+        size: "N/A",
         price: 1500,
       },
       {
         name: "Adicional Carne",
+        size: "N/A",
         price: 1500,
       },
       {
         name: "Adicional Pollo",
+        size: "N/A",
         price: 1500,
       },
       {
         name: "Adicional Anchoas",
+        size: "N/A",
         price: 1500,
       },
       {
         name: "Bebida 2L",
+        size: "N/A",
         price: 2000,
       },
     ],

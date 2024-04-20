@@ -46,8 +46,8 @@ export default function People() {
           <div className='col'>
             <div>
               {orders.map((order) => (
-                <Card key={order._id} title={order.date} className='cardP'>
-                  <p className="m-0 p-0">Price: {order.price}</p>
+                <Card key={order._id} title={order._id} className='cardP'>
+                  <p className="m-0 p-0">Total: {order.total}</p>
                   <div className='flex gap-4'>
                     <Button icon='pi pi-user-edit' rounded severity="secondary" raised onClick={(ev) => navigate(`/orders/${order._id}/edit`)}/>
                     <Button icon='pi pi-trash' className='btn' rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
