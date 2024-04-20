@@ -8,7 +8,6 @@ import { Card } from 'primereact/card';
 import { Tooltip } from 'primereact/tooltip';
 
 export default function People() {
-  const [people, setPeople] = useState([]);
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
   const [token, setToken] = useToken();
@@ -83,8 +82,8 @@ export default function People() {
             <div>
               {products.map((product) => (
                 <Card key={product._id} title={product.name} className='cardP'>
-                  <p className="m-0 p-0">Ingredients: {product.ingredients ? product.ingredients.join(', ') : 'N/A'}</p>
-                  <p className="m-0 p-0">Price: {product.price}</p>
+                  <p className="m-0 p-0">Ingredientes: {product.ingredients ? product.ingredients.join(', ') : 'N/A'}</p>
+                  <p className="m-0 p-0">Price: {Number(product.price).toFixed(2)}</p>
                   <div className='flex gap-4'>
                     <Button icon='pi pi-user-edit' rounded severity="secondary" raised onClick={(ev) => navigate(`/products/${product._id}/edit`)}/>
                     <Button icon='pi pi-trash' className='btn' rounded severity="secondary" raised onClick={(ev) => deleteProduct(product._id)}/>

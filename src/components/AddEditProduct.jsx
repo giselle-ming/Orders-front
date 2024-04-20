@@ -47,7 +47,7 @@ function AddEditProduct() {
         .then((resp) => {
           if (resp.ok) {
             console.log('Product eliminada exitosamente');
-            navigate('/products');
+            navigate('/home');
           } else {
             console.log('Error eliminando product');
           }
@@ -62,49 +62,49 @@ function AddEditProduct() {
     };
 
   const handleSubmit = (ev) => {
-    ev.preventDefault();
-    
-    const data = {
-      name: name,
-      ingredients: ingredients.split(','),
-      size: size,
-      price: price
-    };
-
-    fetch(url, {
-      method: method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-      .then((resp) => {
-        if (resp.ok) {
-          console.log('Product agregada exitosamente');
-          setName('');
-          setIngredients('');
-          setSize('');
-          setPrice('');
-          navigate('/products');
-        } else {
-          console.log('Error eliminando product');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  ev.preventDefault();
+  
+  const data = {
+    name: name,
+    ingredients: ingredients.split(','),
+    size: size,
+    price: Number(price) // convert price to number
   };
+
+  fetch(url, {
+    method: method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then((resp) => {
+      if (resp.ok) {
+        console.log('Product agregada exitosamente');
+        setName('');
+        setIngredients('');
+        setSize('');
+        setPrice('');
+        navigate('/home');
+      } else {
+        console.log('Error eliminando product');
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 
   const handleDelete = (ev) => {
     ev.preventDefault();
     confirmPopup({
-            target: event.currentTarget,
-            message: 'Seguro que quieres eliminar este product?',
-            icon: 'pi pi-exclamation-triangle',
-            accept,
-            reject
-        });
+      target: ev.currentTarget,
+      message: 'Seguro que quieres eliminar este producto?',
+      icon: 'pi pi-exclamation-triangle',
+      accept,
+      reject
+    });
   };
 
   useEffect(() => {
@@ -125,7 +125,7 @@ function AddEditProduct() {
           setName(data.data.name);
           setIngredients(data.data.ingredients.join(','));
           setSize(data.data.size);
-          setPrice(data.data.price);
+          setPrice(data.data.price.toString()); // convert price to string
         })
         .catch((error) => {
           console.warn(error.message);
@@ -172,7 +172,7 @@ function AddEditProduct() {
           <Toast ref={toast} />
           <ConfirmPopup />
           {(params.id) && <Button label="Delete" className="p-button-danger" icon="pi pi-delete-left" iconPos="right" onClick={handleDelete}/>}
-          <Button label="Guardar" icon="pi pi-check" iconPos="right" severity='success' type="submit" tooltip="Submit product" tooltipOptions={{ position: 'bottom' }} />
+          <Button label="Guardar" icon="pi pi-check" iconPos="right" severity='success' type="submit" tooltip="Guardar producto" tooltipOptions={{ position: 'bottom' }} />
         </div>
       </form>
       
