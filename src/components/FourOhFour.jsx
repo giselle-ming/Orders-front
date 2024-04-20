@@ -4,7 +4,7 @@ import '../Styles/FourOhFour.css'
 export default function FourOhFour() {
   return (
     <div className='fof'>
-        <h1>Ops! Something went wrong</h1>
+        <h1>Error! Intenta de nuevo</h1>
     </div>
   )
 }
