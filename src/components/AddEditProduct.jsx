@@ -61,13 +61,13 @@ function AddEditProduct() {
         // toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
     };
 
-  const handleSubmit = (ev) => {
+const handleSubmit = (ev) => {
   ev.preventDefault();
   
   const data = {
     name: name,
-    ingredients: ingredients.split(',').map(ingredient => ingredient.trim()), // convert ingredients to array
-    size: size,
+    ingredients: ingredients, // directly assign ingredients
+    size: size, // directly assign size
     price: Number(price) // convert price to number
   };
 
@@ -84,7 +84,7 @@ function AddEditProduct() {
         console.log('Producto agregado exitosamente');
         setName('');
         setIngredients('');
-        setSize('');
+        setSize('No aplica'); // reset to default size
         setPrice('');
         navigate('/home');
       } else {
@@ -123,7 +123,7 @@ function AddEditProduct() {
         })
         .then((data) => {
           setName(data.data.name);
-          setIngredients(data.data.ingredients.join(','));
+          setIngredients(data.data.ingredients); // directly assign ingredients
           setSize(data.data.size);
           setPrice(data.data.price.toString()); // convert price to string
         })
