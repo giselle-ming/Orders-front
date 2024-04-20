@@ -78,7 +78,7 @@ export default function People() {
                     {order.products.map((product, index) => (
                       <p key={index}>{product.name}</p>
                     ))}
-                    <div className='flex gap-4 justify-content-end'>
+                    <div className='flex gap-4'>
                       <Tooltip target=".edit-btn" position="top" content="Editar">
                         <Button icon='pi pi-pencil' className='edit-btn' rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/edit`)}/>
                       </Tooltip>
