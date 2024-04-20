@@ -23,9 +23,9 @@ function AddEditProduct() {
   const [price, setPrice] = useState('');
   const navigate = useNavigate();
   let params = useParams();
-  let url = `https://orders-api-dx4t.onrender.com/api/product/${params.id}`;
-  let method = 'PUT';
-  let subtitle = `Edit ${name}`;
+  let url = params.id ? `https://orders-api-dx4t.onrender.com/api/product/${params.id}` : `https://orders-api-dx4t.onrender.com/api/product/`;
+  let method = params.id ? 'PUT' : 'POST';
+  let subtitle = params.id ? `Edit ${name}` : 'Agregar Producto';
   const toast = useRef(null);
   const [size, setSize] = useState('No aplica');
 
