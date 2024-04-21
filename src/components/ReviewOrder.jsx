@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToken } from '../context/TokenContext'; // Import useToken hook
 
-function EditOrder() {
+function ReviewOrder() {
   const [order, setOrder] = useState(null);
   const [token] = useToken(); // Use the useToken hook to get the token
   const params = useParams();
@@ -29,17 +29,19 @@ function EditOrder() {
     fetchOrder();
   }, [params.id, token]); // Add token to the dependency array
 
+  // Function to format date as "dd-mm-yyyy hh:mm"
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    return formattedDate;
+  };
+
   return (
     <>
       <h2>Detalle de la Orden</h2>
       {order && (
         <div>
-          <h3>Productos:</h3>
-          <ul>
-            {order.products.map((product, index) => (
-              <li key={index}>{product.name} - Tamaño: {product.size} - Precio: {product.price}</li>
-            ))}
-          </ul>
+          <h3>Fecha: {formatDate(order.date)}</h3>
           <div>
             <h3>Factura</h3>
             <table style={{ borderCollapse: 'collapse', width: '100%' }}>
@@ -73,4 +75,4 @@ function EditOrder() {
   );
 }
 
-export default EditOrder;
+export default ReviewOrder;
