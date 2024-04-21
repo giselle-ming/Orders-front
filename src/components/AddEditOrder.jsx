@@ -100,49 +100,49 @@ function AddEditOrder() {
     // toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
   };
 
-  const handleSubmit = (ev) => {
-    ev.preventDefault();
-    
-    const orderData = {
-      products: [
-        ...selectedProducts.map(product => ({
-          name: product.name,
-          size: product.size,
-          price: product.price
-        })),
-        ...selectedExtras.map(extra => ({ // Treat extras as products
-          name: extra.name,
-          size: '-', // Assuming size is not applicable for extras
-          price: extra.price
-        }))
-      ],
-      total: total
-      // Add other necessary fields for the order
-    };
-
-    fetch(url, {
-      method: method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(orderData)
-    })
-    .then((resp) => {
-      if (resp.ok) {
-        console.log('Order ' + (params.id ? 'updated' : 'added') + ' successfully');
-        setSelectedProducts([]);
-        setSelectedExtras([]);
-        setTotal(0); 
-        navigate('/home');
-      } else {
-        console.log('Error ' + (params.id ? 'updating' : 'adding') + ' order');
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+const handleSubmit = (ev) => {
+  ev.preventDefault();
+  
+  const orderData = {
+    products: [
+      ...selectedProducts.map(product => ({
+        name: product.name,
+        size: product.size,
+        price: product.price
+      })),
+      ...selectedExtras.map(extra => ({ // Treat extras as products
+        name: extra.name,
+        size: '-', // Assuming size is not applicable for extras
+        price: extra.price
+      }))
+    ],
+    total: total
+    // Add other necessary fields for the order
   };
+
+  fetch(url, {
+    method: method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(orderData)
+  })
+  .then((resp) => {
+    if (resp.ok) {
+      console.log('Order ' + (params.id ? 'updated' : 'added') + ' successfully');
+      setSelectedProducts([]);
+      setSelectedExtras([]);
+      setTotal(0); 
+      navigate('/home');
+    } else {
+      console.log('Error ' + (params.id ? 'updating' : 'adding') + ' order');
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+};
 
 
   const handleDelete = (index) => {
@@ -181,33 +181,32 @@ function AddEditOrder() {
       <h2>{subtitle}</h2>
       <div>
         <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
-          <div className="flex flex-column gap-1">
-            <label htmlFor="order_products">Pizzas</label>
-            <Dropdown 
-              id="order_products" 
-              value={selectedProduct} 
-              options={products} 
-              onChange={(e) => {
-                setSelectedProduct(e.value);
-              }} 
-              style={{ width: '400px', height: '50px' }} 
-            />
-            <Button 
-              style={{ width: '400px', height: '50px' }}
-              label="Agregar" 
-              className="p-button-primary" 
-              onClick={handleAddProduct} 
-            />
+            <div className="flex flex-column gap-1">
+              <label htmlFor="order_products">Pizzas</label>
+              <Dropdown 
+                id="order_products" 
+                value={selectedProduct} 
+                options={products} 
+                onChange={(e) => {
+                  setSelectedProduct(e.value);
+                }} 
+                style={{ width: '400px', height: '50px' }} 
+              />
+              <Button 
+                style={{ width: '400px', height: '50px' }}
+                label="Agregar" 
+                className="p-button-primary" 
+                onClick={handleAddProduct} 
+              />
+            </div>
           </div>
-        </div>
-        {params.id && (
-          <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
+        <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
             <div className="flex flex-column gap-1">
               <label htmlFor="order_extras">Extras</label>
               <Dropdown 
                 id="order_extras" 
                 value={selectedExtra} 
-                options={data.options.extras ? data.options.extras.map(extra => ({ label: extra.name, value: extra })) : []} 
+                options={data.options.extras.map(extra => ({ label: extra.name, value: extra }))} 
                 onChange={(e) => {
                   setSelectedExtra(e.value);
                 }} 
@@ -221,7 +220,6 @@ function AddEditOrder() {
               />
             </div>
           </div>
-        )}
         <form onSubmit={handleSubmit} className='flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start'>
           <div className="selected-products-table">
             <h3>Factura</h3>
