@@ -2,10 +2,10 @@
     width: 100%;
     height: 100vh;
     background-color: var(--primary-100);
-    border-radius: 70% 90% / 10% 90%;
+    border-radius: 20px;
 }
 .gifts{
-    width: 15%;
+    width: 50%;
     border-radius: 4rem;
     -webkit-border-radius: 4rem;
     -moz-border-radius: 4rem;

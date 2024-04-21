@@ -22,7 +22,7 @@ function AddEditOrder() {
   const params = useParams();
   let url = `https://orders-api-dx4t.onrender.com/api/order/${params.id || ''}`;
   let method = params.id ? 'PUT' : 'POST';
-  let subtitle = params.id ? 'Edit Order' : 'Add Order';
+  let subtitle = params.id ? 'Editar Orden' : 'Agrear Orden';
   const toast = useRef(null);
 
   useEffect(() => {
@@ -53,6 +53,17 @@ function AddEditOrder() {
       });
     }
   }, [params.id, token]);
+
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    selectedProducts.forEach(product => {
+      totalPrice += product.price;
+    });
+    selectedExtras.forEach(extra => {
+      totalPrice += extra.price;
+    });
+    setTotal(totalPrice);
+  };
 
   const accept = () => {
     toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'Order deleted', life: 3000 });
@@ -104,6 +115,7 @@ function AddEditOrder() {
       if (resp.ok) {
         console.log('Order ' + (params.id ? 'updated' : 'added') + ' successfully');
         setSelectedProducts([]);
+        setSelectedExtras([]);
         setTotal(0); 
         navigate('/home');
       } else {
@@ -118,11 +130,13 @@ function AddEditOrder() {
   const handleDelete = (ev, index) => {
     ev.preventDefault();
     setSelectedProducts(prevState => prevState.filter((_, i) => i !== index));
+    calculateTotalPrice();
   };
 
   const handleDeleteExtra = (ev, index) => {
     ev.preventDefault();
     setSelectedExtras(prevState => prevState.filter((_, i) => i !== index));
+    calculateTotalPrice();
   };
 
   useEffect(() => {
@@ -133,6 +147,7 @@ function AddEditOrder() {
     if (selectedProduct) {
       setSelectedProducts(prevState => [...prevState, selectedProduct]);
       setSelectedProduct(null);
+      calculateTotalPrice();
     }
   };
 
@@ -140,6 +155,7 @@ function AddEditOrder() {
     if (selectedExtra) {
       setSelectedExtras(prevState => [...prevState, selectedExtra]);
       setSelectedExtra(null);
+      calculateTotalPrice();
     }
   };
 
