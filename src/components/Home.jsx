@@ -16,7 +16,7 @@ export default function People() {
 
   const deleteOrder = (orderId) => {
     // Function to delete the order
-    const confirmDelete = window.confirm("Are you sure you want to delete this order?");
+    const confirmDelete = window.confirm("Estas seguro que quieres eliminar esta orden?");
     if (!confirmDelete) return; // If user cancels, exit
 
     const url = `https://orders-api-dx4t.onrender.com/api/order/${orderId}`;
