@@ -242,7 +242,7 @@ function AddEditOrder() {
                 onChange={(e) => setTotal(e.target.value)} // Allow editing of the total
                 style={{ width: '400px', height: '50px' }} 
               />
-            </div>
+            </div> 
           </div>
           <div className='flex justify-content-center gap-2'>
             <Toast ref={toast} />
