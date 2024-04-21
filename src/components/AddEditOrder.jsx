@@ -104,11 +104,18 @@ function AddEditOrder() {
     ev.preventDefault();
     
     const orderData = {
-      products: selectedProducts.map(product => ({
-        name: product.name,
-        size: product.size,
-        price: product.price
-      })),
+      products: [
+        ...selectedProducts.map(product => ({
+          name: product.name,
+          size: product.size,
+          price: product.price
+        })),
+        ...selectedExtras.map(extra => ({ // Treat extras as products
+          name: extra.name,
+          size: '-', // Assuming size is not applicable for extras
+          price: extra.price
+        }))
+      ],
       total: total
       // Add other necessary fields for the order
     };
@@ -136,6 +143,7 @@ function AddEditOrder() {
       console.error(error);
     });
   };
+
 
   const handleDelete = (index) => {
     setSelectedProducts(prevState => {
