@@ -181,26 +181,27 @@ function AddEditOrder() {
       <h2>{subtitle}</h2>
       <div>
         <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
-            <div className="flex flex-column gap-1">
-              <label htmlFor="order_products">Pizzas</label>
-              <Dropdown 
-                id="order_products" 
-                value={selectedProduct} 
-                options={products} 
-                onChange={(e) => {
-                  setSelectedProduct(e.value);
-                }} 
-                style={{ width: '400px', height: '50px' }} 
-              />
-              <Button 
-                style={{ width: '400px', height: '50px' }}
-                label="Agregar" 
-                className="p-button-primary" 
-                onClick={handleAddProduct} 
-              />
-            </div>
+          <div className="flex flex-column gap-1">
+            <label htmlFor="order_products">Pizzas</label>
+            <Dropdown 
+              id="order_products" 
+              value={selectedProduct} 
+              options={products} 
+              onChange={(e) => {
+                setSelectedProduct(e.value);
+              }} 
+              style={{ width: '400px', height: '50px' }} 
+            />
+            <Button 
+              style={{ width: '400px', height: '50px' }}
+              label="Agregar" 
+              className="p-button-primary" 
+              onClick={handleAddProduct} 
+            />
           </div>
-        <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
+        </div>
+        {params.id && (
+          <div className="flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start">
             <div className="flex flex-column gap-1">
               <label htmlFor="order_extras">Extras</label>
               <Dropdown 
@@ -220,6 +221,7 @@ function AddEditOrder() {
               />
             </div>
           </div>
+        )}
         <form onSubmit={handleSubmit} className='flex flex-column flex-wrap gap-2 align-content-center justify-content-center align-self-start'>
           <div className="selected-products-table">
             <h3>Factura</h3>
