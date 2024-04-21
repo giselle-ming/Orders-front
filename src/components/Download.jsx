@@ -10,13 +10,14 @@ const DownloadOrders = () => {
   const [endDate, setEndDate] = useState(null);
   const [orders, setOrders] = useState([]);
   const [token] = useToken(); // Import useToken hook
+  const [showDownloadLink, setShowDownloadLink] = useState(false); // State to control showing the download link
 
   useEffect(() => {
     if (orders.length > 0) {
-      // Automatically download PDF when orders are fetched
-      downloadPDF();
+      // Show the download link when orders are fetched
+      setShowDownloadLink(true);
     }
-  }, [orders, startDate, endDate]);
+  }, [orders]);
 
   const fetchOrders = () => {
     const url = `https://orders-api-dx4t.onrender.com/api/order`;
@@ -52,12 +53,12 @@ const DownloadOrders = () => {
     const styles = {
       page: {
         flexDirection: 'row',
-        backgroundColor: '#ffffff'
+        backgroundColor: '#fff',
+        padding: 20
       },
       section: {
-        margin: 10,
-        padding: 10,
-        flexGrow: 1
+        flexGrow: 1,
+        marginBottom: 20
       },
       title: {
         fontSize: 18,
@@ -67,25 +68,24 @@ const DownloadOrders = () => {
       table: {
         display: 'table',
         width: '100%',
-        borderCollapse: 'collapse',
-        marginTop: 10
+        borderCollapse: 'collapse'
       },
       tableRow: {
-        display: 'table-row',
+        display: 'table-row'
       },
       columnHeader: {
         backgroundColor: '#f2f2f2',
         fontWeight: 'bold',
         border: '1px solid #000',
-        padding: 5
+        padding: 8
       },
       column: {
         border: '1px solid #000',
-        padding: 5
+        padding: 8
       },
       total: {
-        marginTop: 10,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginTop: 10
       }
     };
 
@@ -115,14 +115,6 @@ const DownloadOrders = () => {
     );
   };
 
-  // Function to download the PDF
-  const downloadPDF = () => {
-    if (orders.length > 0) {
-      const pdf = generatePDF();
-      pdf.save(`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`);
-    }
-  };
-
   // Function to calculate total sales during the period
   const calculateTotalSales = () => {
     let totalSales = 0;
@@ -149,12 +141,15 @@ const DownloadOrders = () => {
         <Button label="Consultar Ordenes" onClick={fetchOrders} />
       </div>
       <div className="download-link-container">
-        <PDFDownloadLink
-          document={generatePDF()}
-          fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
-        >
-          {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
-        </PDFDownloadLink>
+        {/* Conditionally render the download link */}
+        {showDownloadLink && (
+          <PDFDownloadLink
+            document={generatePDF()}
+            fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
+          >
+            {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
+          </PDFDownloadLink>
+        )}
       </div>
     </div>
   );

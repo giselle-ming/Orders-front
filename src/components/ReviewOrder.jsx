@@ -1,158 +1,175 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'primereact/button';
-import { PDFDownloadLink, Document, Page, Text, View } from '@react-pdf/renderer';
-import { useToken } from '../context/TokenContext';
-import '../Styles/DownloadOrders.css';
-import { Calendar } from 'primereact/calendar';
+import { useParams } from 'react-router-dom';
+import { useToken } from '../context/TokenContext'; // Import useToken hook
+import { PDFDownloadLink, PDFViewer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
-const DownloadOrders = () => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [orders, setOrders] = useState([]);
-  const [token] = useToken(); // Import useToken hook
-  const [showDownloadLink, setShowDownloadLink] = useState(false); // State to control showing the download link
+function ReviewOrder() {
+  const [order, setOrder] = useState(null);
+  const [token] = useToken(); // Use the useToken hook to get the token
+  const params = useParams();
 
   useEffect(() => {
-    if (orders.length > 0) {
-      // Show the download link when orders are fetched
-      setShowDownloadLink(true);
-    }
-  }, [orders]);
-
-  const fetchOrders = () => {
-    const url = `https://orders-api-dx4t.onrender.com/api/order`;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json'
-      }
-    })
-      .then((resp) => {
-        if (resp.status === 401) throw new Error('Unauthorized access to API.');
-        if (!resp.ok) throw new Error('Invalid response.');
-        return resp.json();
-      })
-      .then((data) => {
-        // Filter orders based on selected dates
-        const filteredOrders = data.data.filter(order => {
-          const orderDate = new Date(order.date);
-          return startDate && endDate
-            ? orderDate >= startDate && orderDate <= endDate
-            : true;
+    const fetchOrder = async () => {
+      try {
+        const response = await fetch(`https://orders-api-dx4t.onrender.com/api/order/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-        setOrders(filteredOrders);
-      })
-      .catch((error) => {
-        console.warn(error.message);
-      });
-  };
-
-  // Function to generate PDF document for orders
-  const generatePDF = () => {
-    const styles = {
-      page: {
-        flexDirection: 'row',
-        backgroundColor: '#fff',
-        padding: 20
-      },
-      section: {
-        flexGrow: 1,
-        marginBottom: 20
-      },
-      title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10
-      },
-      table: {
-        display: 'table',
-        width: '100%',
-        borderCollapse: 'collapse'
-      },
-      tableRow: {
-        display: 'table-row'
-      },
-      columnHeader: {
-        backgroundColor: '#f2f2f2',
-        fontWeight: 'bold',
-        border: '1px solid #000',
-        padding: 8
-      },
-      column: {
-        border: '1px solid #000',
-        padding: 8
-      },
-      total: {
-        fontWeight: 'bold',
-        marginTop: 10
+        if (response.ok) {
+          const data = await response.json();
+          setOrder(data.data);
+        } else {
+          console.log('Error fetching order');
+        }
+      } catch (error) {
+        console.error(error);
       }
     };
 
-    return (
-      <Document>
-        <Page style={styles.page}>
-          <View style={styles.section}>
-            <Text style={styles.title}>Ventas</Text>
-            <View style={styles.table}>
-              <View style={styles.tableRow}>
-                <Text style={styles.columnHeader}>Fecha</Text>
-                <Text style={styles.columnHeader}>Orden</Text>
-                <Text style={styles.columnHeader}>Total</Text>
-              </View>
-              {orders.map((order, index) => (
-                <View style={styles.tableRow} key={index}>
-                  <Text style={styles.column}>{new Date(order.date).toLocaleDateString('es')}</Text>
-                  <Text style={styles.column}>{order.products.map(product => product.name).join(', ')}</Text>
-                  <Text style={styles.column}>{order.total}</Text>
-                </View>
-              ))}
-            </View>
-            <Text style={styles.total}>Total Sales: {calculateTotalSales()}</Text>
-          </View>
-        </Page>
-      </Document>
-    );
+    fetchOrder();
+  }, [params.id, token]); // Add token to the dependency array
+
+  // Function to format date as "dd-mm-yyyy hh:mm"
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    return formattedDate;
   };
 
-  // Function to calculate total sales during the period
-  const calculateTotalSales = () => {
-    let totalSales = 0;
-    orders.forEach(order => {
-      totalSales += order.total;
-    });
-    return totalSales;
-  };
+// PDF document component
+const FacturaPDF = () => (
+  <Document>
+    <Page style={styles.page}>
+      <View style={styles.section}>
+        <Text>Detalle de la Orden</Text>
+        <Text>Fecha: {order && formatDate(order.date)}</Text>
+        <Text>Numero de orden: {params.id}</Text>
+        <View style={styles.table}>
+          <View style={styles.row}>
+            <Text style={styles.columnHeader}>Producto</Text>
+          </View>
+          {order && order.products.map((product, index) => (
+            <View style={styles.row} key={index}>
+              <Text style={styles.totalColumn}>{product.name} {product.size}</Text>
+              <Text style={styles.total}>{product.price}</Text>
+            </View>
+          ))}
+          <View style={styles.row}>
+            <Text style={styles.totalColumn}>Total:</Text>
+            <Text style={styles.total}>{order && order.total}</Text>
+          </View>
+        </View>
+      </View>
+    </Page>
+  </Document>
+);
+
+// Styles for PDF document
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'row',
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1
+  },
+  table: {
+    display: 'table',
+    width: '100%',
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    borderCollapse: 'collapse',
+    marginTop: 10
+  },
+  row: {
+    display: 'table-row',
+  },
+  columnHeader: {
+    backgroundColor: '#f2f2f2',
+    fontWeight: 'bold',
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5,
+    textAlign: 'center'
+  },
+  leftColumn: {
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5,
+    width: '75%'
+  },
+  rightColumn: {
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5,
+    width: '25%',
+    textAlign: 'right'
+  },
+  totalColumn: {
+    fontWeight: 'bold',
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5
+  },
+  total: {
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5,
+    textAlign: 'right'
+  }
+});
+
 
   return (
-    <div className="download-orders-container">
-      <h2>Descargar Órdenes</h2>
-      <div className="date-inputs">
-        <div className="date-input">
-          <label htmlFor="startDate">Desde: </label>
-          <Calendar value={startDate} onChange={(e) => setStartDate(e.value)} showIcon />
-        </div>
-        <div className="date-input">
-          <label htmlFor="endDate">Hasta: </label>
-          <Calendar value={endDate} onChange={(e) => setEndDate(e.value)} showIcon />
-        </div>
-      </div>
-      <div className="button-container">
-        <Button label="Consultar Ordenes" onClick={fetchOrders} />
-      </div>
-      <div className="download-link-container">
-        {/* Conditionally render the download link */}
-        {showDownloadLink && (
-          <PDFDownloadLink
-            document={generatePDF()}
-            fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
-          >
-            {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
+    <>
+      <h2>Detalle de la Orden</h2>
+      {order && (
+        <div>
+          <h3>Fecha: {formatDate(order.date)}</h3>
+          <div>
+            <h3>Factura</h3>
+            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+              <thead>
+                <tr>
+                  <th style={{ border: '1px solid black', padding: '10px' }}>Producto</th>
+                  <th style={{ border: '1px solid black', padding: '10px' }}>Tamaño</th>
+                  <th style={{ border: '1px solid black', padding: '10px' }}>Precio</th>
+                </tr>
+              </thead>
+              <tbody>
+                {order.products.map((product, index) => (
+                  <tr key={index}>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>{product.name}</td>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>{product.size}</td>
+                    <td style={{ border: '1px solid black', padding: '10px' }}>{product.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan="2" style={{ border: '1px solid black', padding: '10px', textAlign: 'right' }}>Total:</td>
+                  <td style={{ border: '1px solid black', padding: '10px' }}>{order.total}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          {/* PDF Download Button */}
+          <PDFDownloadLink document={<FacturaPDF />} fileName={`factura-${params.id}.pdf`}>
+            {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Descargar Factura')}
           </PDFDownloadLink>
-        )}
-      </div>
-    </div>
-  );
-};
 
-export default DownloadOrders;
+        </div>
+      )}
+    </>
+  );
+}
+
+export default ReviewOrder;
