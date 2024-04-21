@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { PDFDownloadLink, Document, Page, Text, View } from '@react-pdf/renderer';
 import { useToken } from '../context/TokenContext';
+import '../Styles/DownloadOrders.css';
 
 const DownloadOrders = () => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [orders, setOrders] = useState([]);
   const [token] = useToken(); // Import useToken hook
 
@@ -37,10 +38,10 @@ const DownloadOrders = () => {
     <Document>
       <Page>
         <View>
-          <Text>Orders between {startDate} and {endDate}</Text>
+          <Text>Orders between {startDate && startDate.toLocaleDateString('es')} and {endDate && endDate.toLocaleDateString('es')}</Text>
           {orders.map((order, index) => (
             <View key={index}>
-              <Text>Date: {order.date}</Text>
+              <Text>Date: {new Date(order.date).toLocaleDateString('es')}</Text>
               <Text>Order: {order.products.map(product => product.name).join(', ')}</Text>
               <Text>Total: {order.total}</Text>
             </View>
@@ -61,23 +62,37 @@ const DownloadOrders = () => {
   };
 
   return (
-    <div>
-      <h2>Download Orders</h2>
-      <div>
-        <label>Desde:</label>
-        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+    <div className="download-orders-container">
+      <h2>Descargar Órdenes</h2>
+      <div className="date-inputs">
+        <div className="date-input">
+          <label htmlFor="startDate">Desde:</label>
+          <Calendar
+            id="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.value)}
+            locale="es"
+            showIcon
+          />
+        </div>
+        <div className="date-input">
+          <label htmlFor="endDate">Hasta:</label>
+          <Calendar
+            id="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.value)}
+            locale="es"
+            showIcon
+          />
+        </div>
       </div>
-      <div>
-        <label>Hasta:</label>
-        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+      <div className="button-container">
+        <Button label="Descargar Órdenes" onClick={fetchOrders} />
       </div>
-      <div>
-        <Button label="Descargar Ordenes" onClick={fetchOrders} />
-      </div>
-      <div>
+      <div className="download-link-container">
         {orders.length > 0 && (
-          <PDFDownloadLink document={generatePDF()} fileName={`ordenes-${startDate}-${endDate}.pdf`}>
-            {({ loading }) => (loading ? 'Loading...' : 'Download Orders')}
+          <PDFDownloadLink document={generatePDF()} fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}>
+            {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
           </PDFDownloadLink>
         )}
       </div>

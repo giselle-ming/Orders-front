@@ -1,0 +1,22 @@
+.download-orders-container {
+  margin: 20px;
+}
+
+.date-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.date-input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.button-container {
+  margin-bottom: 20px;
+}
+
+.download-link-container {
+  text-align: center;
+}
