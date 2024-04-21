@@ -37,88 +37,86 @@ function ReviewOrder() {
     return formattedDate;
   };
 
-  // PDF document component
-  const FacturaPDF = () => (
-    <Document>
-      <Page style={styles.page}>
-        <View style={styles.section}>
-          <Text>Detalle de la Orden</Text>
-          <Text>Fecha: {order && formatDate(order.date)}</Text>
-          <View style={styles.table}>
-            <View style={styles.row}>
-              <Text style={styles.columnHeader}>Producto</Text>
-              <Text style={styles.columnHeader}>Tamaño</Text>
-              <Text style={styles.columnHeader}>Precio</Text>
+// PDF document component
+const FacturaPDF = () => (
+  <Document>
+    <Page style={styles.page}>
+      <View style={styles.section}>
+        <Text>Detalle de la Orden</Text>
+        <Text>Fecha: {order && formatDate(order.date)}</Text>
+        <View style={styles.table}>
+          <View style={styles.row}>
+            <Text style={styles.columnHeader}>Producto</Text>
+            <Text style={styles.columnHeader}>Monto</Text> {/* Changed from Tamaño to Monto */}
+          </View>
+          {order && order.products.map((product, index) => (
+            <View style={styles.row} key={index}>
+              <Text style={styles.column}>{product.name}</Text>
+              <Text style={styles.column}>{product.price}</Text> {/* Changed from product.size to product.price */}
             </View>
-            {order && order.products.map((product, index) => (
-              <View style={styles.row} key={index}>
-                <Text style={styles.column}>{product.name}</Text>
-                <Text style={styles.column}>{product.size}</Text>
-                <Text style={styles.column}>{product.price}</Text>
-              </View>
-            ))}
-            <View style={styles.row}>
-              <Text style={styles.totalColumn}>Total:</Text>
-              <Text style={styles.total}>{order && order.total}</Text>
-            </View>
+          ))}
+          <View style={styles.row}>
+            <Text style={styles.totalColumn}>Total:</Text>
+            <Text style={styles.total}>{order && order.total}</Text>
           </View>
         </View>
-      </Page>
-    </Document>
-  );
+      </View>
+    </Page>
+  </Document>
+);
 
-  // Styles for PDF document
-  const styles = StyleSheet.create({
-    page: {
-      flexDirection: 'row',
-      backgroundColor: '#E4E4E4'
-    },
-    section: {
-      margin: 10,
-      padding: 10,
-      flexGrow: 1
-    },
-    table: {
-      display: 'table',
-      width: '100%',
-      borderStyle: 'solid',
-      borderColor: '#000',
-      borderWidth: 1,
-      borderCollapse: 'collapse',
-      marginTop: 10
-    },
-    row: {
-      display: 'table-row',
-    },
-    columnHeader: {
-      backgroundColor: '#f2f2f2',
-      fontWeight: 'bold',
-      borderStyle: 'solid',
-      borderColor: '#000',
-      borderWidth: 1,
-      padding: 5
-    },
-    column: {
-      borderStyle: 'solid',
-      borderColor: '#000',
-      borderWidth: 1,
-      padding: 5
-    },
-    totalColumn: {
-      backgroundColor: '#f2f2f2',
-      fontWeight: 'bold',
-      borderStyle: 'solid',
-      borderColor: '#000',
-      borderWidth: 1,
-      padding: 5
-    },
-    total: {
-      borderStyle: 'solid',
-      borderColor: '#000',
-      borderWidth: 1,
-      padding: 5
-    }
-  });
+// Styles for PDF document
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'row',
+    backgroundColor: '#E4E4E4'
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1
+  },
+  table: {
+    display: 'table',
+    width: '100%',
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    borderCollapse: 'collapse',
+    marginTop: 10
+  },
+  row: {
+    display: 'table-row',
+  },
+  columnHeader: {
+    backgroundColor: '#f2f2f2',
+    fontWeight: 'bold',
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5
+  },
+  column: {
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5
+  },
+  totalColumn: {
+    backgroundColor: '#f2f2f2',
+    fontWeight: 'bold',
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5
+  },
+  total: {
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5
+  }
+});
 
   return (
     <>
@@ -154,9 +152,10 @@ function ReviewOrder() {
             </table>
           </div>
           {/* PDF Download Button */}
-          <PDFDownloadLink document={<FacturaPDF />} fileName="factura.pdf">
+          <PDFDownloadLink document={<FacturaPDF />} fileName={`factura-${params.id}.pdf`}>
             {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Descargar Factura')}
           </PDFDownloadLink>
+
         </div>
       )}
     </>
