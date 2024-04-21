@@ -33,7 +33,14 @@ const DownloadOrders = () => {
         return resp.json();
       })
       .then((data) => {
-        setOrders(data.data);
+        // Filter orders based on selected dates
+        const filteredOrders = data.data.filter(order => {
+          const orderDate = new Date(order.date);
+          return startDate && endDate
+            ? orderDate >= startDate && orderDate <= endDate
+            : true;
+        });
+        setOrders(filteredOrders);
       })
       .catch((error) => {
         console.warn(error.message);
@@ -125,31 +132,32 @@ const DownloadOrders = () => {
     return totalSales;
   };
 
-return (
-  <div className="download-orders-container">
-    <h2>Descargar Órdenes</h2>
-    <div className="date-inputs">
-      <div className="date-input">
-        <label htmlFor="startDate">Desde: </label>
-        <Calendar value={startDate} onChange={(e) => setStartDate(e.value)} showIcon />
+  return (
+    <div className="download-orders-container">
+      <h2>Descargar Órdenes</h2>
+      <div className="date-inputs">
+        <div className="date-input">
+          <label htmlFor="startDate">Desde: </label>
+          <Calendar value={startDate} onChange={(e) => setStartDate(e.value)} showIcon />
+        </div>
+        <div className="date-input">
+          <label htmlFor="endDate">Hasta: </label>
+          <Calendar value={endDate} onChange={(e) => setEndDate(e.value)} showIcon />
+        </div>
       </div>
-      <div className="date-input">
-        <label htmlFor="endDate">Hasta: </label>
-        <Calendar value={endDate} onChange={(e) => setEndDate(e.value)} showIcon />
+      <div className="button-container">
+        <Button label="Consultar Ordenes" onClick={fetchOrders} />
+      </div>
+      <div className="download-link-container">
+        <PDFDownloadLink
+          document={generatePDF()}
+          fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
+        >
+          {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
+        </PDFDownloadLink>
       </div>
     </div>
-    <div className="button-container">
-      <Button label="Consultar Ordenes" onClick={fetchOrders} />
-    </div>
-    <div className="download-link-container">
-      <PDFDownloadLink
-        document={generatePDF()}
-        fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
-      >
-        {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
-      </PDFDownloadLink>
-    </div>
-  </div>
-);
+  );
+};
 
 export default DownloadOrders;
