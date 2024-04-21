@@ -28,6 +28,8 @@ const DownloadOrders = () => {
       })
       .then((data) => {
         setOrders(data.data);
+        // Automatically download PDF when orders are fetched
+        downloadPDF();
       })
       .catch((error) => {
         console.warn(error.message);
@@ -102,6 +104,13 @@ const styles = {
   }
 };
 
+  // Function to download the PDF
+  const downloadPDF = () => {
+    if (orders.length > 0) {
+      const pdf = generatePDF();
+      pdf.save(`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`);
+    }
+  };
 
   // Function to calculate total sales during the period
   const calculateTotalSales = () => {
@@ -117,23 +126,16 @@ const styles = {
       <h2>Descargar Órdenes</h2>
       <div className="date-inputs">
         <div className="date-input">
-          <label htmlFor="startDate">Desde:</label>
-          <Calendar value={startDate} onChange={(e) => setDate(e.value)} dateFormat="dd/mm/yy" />
+          <label htmlFor="startDate">Desde: </label>
+          <Calendar value={startDate} onChange={(e) => setDate(e.value)} showIcon />
         </div>
         <div className="date-input">
-          <label htmlFor="endDate">Hasta:</label>
-          <Calendar value={endDate} onChange={(e) => setDate(e.value)} dateFormat="dd/mm/yy" />
+          <label htmlFor="endDate">Hasta: </label>
+          <Calendar value={endDate} onChange={(e) => setDate(e.value)} showIcon />
         </div>
       </div>
       <div className="button-container">
-        <Button label="Descargar Órdenes" onClick={fetchOrders} />
-      </div>
-      <div className="download-link-container">
-        {orders.length > 0 && (
-          <PDFDownloadLink document={generatePDF()} fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}>
-            {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
-          </PDFDownloadLink>
-        )}
+        <Button label="Descargar Ordenes" onClick={fetchOrders} />
       </div>
     </div>
   );
