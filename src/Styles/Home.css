@@ -22,3 +22,31 @@
 .titlePeople{
     font-size: 1.25rem;
 }
+
+/* For small screens (e.g., mobile devices) */
+@media only screen and (max-width: 600px) {
+    .list {
+        padding: 0;
+    }
+
+    .cardP {
+        margin-top: 1rem;
+        padding: 1rem;
+        /* Add padding to create space between cards */
+    }
+
+    .btn {
+        margin: 0.5rem;
+        /* Adjust button margin for smaller screens */
+    }
+
+    .p-card .p-card-content {
+        padding: 1rem;
+        /* Add padding to card content for better spacing */
+    }
+
+    .titlePeople {
+        font-size: 1rem;
+        /* Decrease font size for smaller screens */
+    }
+}
