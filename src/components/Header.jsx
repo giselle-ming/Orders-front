@@ -24,11 +24,14 @@ export default function Header() {
       <header>
         <Logout />
         <h1>Pizzas-Caracas</h1>
-<div style={{ display: 'flex', gap: '10px' }}>
-  <Button rounded text raised severity="secondary" onClick={(ev) => navigate(`order/addOrder`)}>
-    Agregar Orden
-  </Button>
-</div>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Button rounded text raised severity="secondary" onClick={(ev) => navigate(`order/addOrder`)}>
+            Agregar Orden
+          </Button>
+          <Button rounded text raised severity="secondary" onClick={(ev) => navigate(`order/download`)}>
+            Descargar
+          </Button>
+        </div>
       </header>
     </div>
     )
