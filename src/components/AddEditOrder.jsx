@@ -45,6 +45,7 @@ function AddEditOrder() {
         const order = data.data;
         if (order) {
           setSelectedProducts(order.products);
+          setSelectedExtras(order.extras); // Set selected extras
           setTotal(order.total);
         }
       })
@@ -53,6 +54,7 @@ function AddEditOrder() {
       });
     }
   }, [params.id, token]);
+
 
   useEffect(() => {
     setProducts(data.pizzas.map(product => ({ label: `${product.name} - ${product.size}`, value: product })));
@@ -246,7 +248,7 @@ function AddEditOrder() {
                       <Button 
                         icon="pi pi-trash" 
                         className="p-button-rounded p-button-danger" 
-                        onClick={() => handleDeleteExtra(index)}
+                        onClick={(ev) => handleDeleteExtra(ev, index)}
                       />
                     </td>
                   </tr>
