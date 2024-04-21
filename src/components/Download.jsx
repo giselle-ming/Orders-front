@@ -103,7 +103,7 @@ const generatePDF = () => {
               </View>
             ))}
           </View>
-          <Text style={styles.total}>Total Vendido entre {initday} - {lastday}: {calculateTotalSales()}</Text>
+          <Text style={styles.total}>Total Vendido entre {startDate} - {endDate}: {calculateTotalSales()}</Text>
         </View>
       </Page>
     </Document>
