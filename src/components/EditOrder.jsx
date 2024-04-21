@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useToken } from '../context/TokenContext'; // Import useToken hook
 
 function EditOrder() {
   const [order, setOrder] = useState(null);
+  const [token] = useToken(); // Use the useToken hook to get the token
   const params = useParams();
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`https://orders-api-dx4t.onrender.com/api/order/${params.id}`);
+        const response = await fetch(`https://orders-api-dx4t.onrender.com/api/order/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setOrder(data.data);
@@ -21,7 +27,7 @@ function EditOrder() {
     };
 
     fetchOrder();
-  }, [params.id]);
+  }, [params.id, token]); // Add token to the dependency array
 
   return (
     <>
