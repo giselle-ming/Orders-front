@@ -10,11 +10,13 @@ const DownloadOrders = () => {
   const [endDate, setEndDate] = useState(null);
   const [orders, setOrders] = useState([]);
   const [token] = useToken(); // Import useToken hook
+  const [pdfDocument, setPdfDocument] = useState(null);
 
   useEffect(() => {
     if (orders.length > 0) {
-      // Automatically download PDF when orders are fetched
-      downloadPDF();
+      // Generate PDF when orders are fetched
+      const pdf = generatePDF();
+      setPdfDocument(pdf);
     }
   }, [orders, startDate, endDate]);
 
@@ -66,14 +68,6 @@ const DownloadOrders = () => {
     </Document>
   );
 
-  // Function to download the PDF
-  const downloadPDF = () => {
-    if (orders.length > 0) {
-      const pdf = generatePDF();
-      pdf.save(`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`);
-    }
-  };
-
   // Function to calculate total sales during the period
   const calculateTotalSales = () => {
     let totalSales = 0;
@@ -97,7 +91,17 @@ const DownloadOrders = () => {
         </div>
       </div>
       <div className="button-container">
-        <Button label="Descargar Ordenes" onClick={fetchOrders} />
+        <Button label="Consultar Ordenes" onClick={fetchOrders} />
+      </div>
+      <div className="download-link-container">
+        {pdfDocument && (
+          <PDFDownloadLink
+            document={pdfDocument}
+            fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
+          >
+            {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
+          </PDFDownloadLink>
+        )}
       </div>
     </div>
   );
