@@ -104,7 +104,7 @@ const DownloadOrders = () => {
                 </View>
               ))}
             </View>
-            <Text style={styles.total}>Total Sales: {calculateTotalSales()}</Text>
+            <Text style={styles.total}>Total Vendido: {calculateTotalSales()}</Text>
           </View>
         </Page>
       </Document>
