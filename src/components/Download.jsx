@@ -34,23 +34,73 @@ const DownloadOrders = () => {
   };
 
   // Function to generate PDF document for orders
-  const generatePDF = () => (
-    <Document>
-      <Page>
-        <View>
-          <Text>Orders between {startDate && startDate.toLocaleDateString('es')} and {endDate && endDate.toLocaleDateString('es')}</Text>
+// Function to generate PDF document for orders
+const generatePDF = () => (
+  <Document>
+    <Page style={styles.page}>
+      <View style={styles.section}>
+        <Text style={styles.title}>Ventas</Text>
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <Text style={styles.columnHeader}>Fecha</Text>
+            <Text style={styles.columnHeader}>Orden</Text>
+            <Text style={styles.columnHeader}>Total</Text>
+          </View>
           {orders.map((order, index) => (
-            <View key={index}>
-              <Text>Date: {new Date(order.date).toLocaleDateString('es')}</Text>
-              <Text>Order: {order.products.map(product => product.name).join(', ')}</Text>
-              <Text>Total: {order.total}</Text>
+            <View style={styles.tableRow} key={index}>
+              <Text style={styles.column}>{new Date(order.date).toLocaleDateString('es')}</Text>
+              <Text style={styles.column}>{order.products.map(product => product.name).join(', ')}</Text>
+              <Text style={styles.column}>{order.total}</Text>
             </View>
           ))}
-          <Text>Total Sales: {calculateTotalSales()}</Text>
         </View>
-      </Page>
-    </Document>
-  );
+        <Text style={styles.total}>Total Sales: {calculateTotalSales()}</Text>
+      </View>
+    </Page>
+  </Document>
+);
+
+// Styles for PDF document
+const styles = {
+  page: {
+    flexDirection: 'row',
+    backgroundColor: '#ffffff'
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10
+  },
+  table: {
+    display: 'table',
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: 10
+  },
+  tableRow: {
+    display: 'table-row',
+  },
+  columnHeader: {
+    backgroundColor: '#f2f2f2',
+    fontWeight: 'bold',
+    border: '1px solid #000',
+    padding: 5
+  },
+  column: {
+    border: '1px solid #000',
+    padding: 5
+  },
+  total: {
+    marginTop: 10,
+    fontWeight: 'bold'
+  }
+};
+
 
   // Function to calculate total sales during the period
   const calculateTotalSales = () => {
