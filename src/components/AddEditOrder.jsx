@@ -22,7 +22,7 @@ function AddEditOrder() {
   const params = useParams();
   let url = `https://orders-api-dx4t.onrender.com/api/order/${params.id || ''}`;
   let method = params.id ? 'PUT' : 'POST';
-  let subtitle = params.id ? 'Editar Orden' : 'Agrear Orden';
+  let subtitle = params.id ? 'Editar Orden' : 'Agregar Orden';
   const toast = useRef(null);
 
   useEffect(() => {
@@ -53,6 +53,14 @@ function AddEditOrder() {
       });
     }
   }, [params.id, token]);
+
+  useEffect(() => {
+    setProducts(data.pizzas.map(product => ({ label: `${product.name} - ${product.size}`, value: product })));
+  }, []);
+
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [selectedProducts, selectedExtras]);
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -127,27 +135,26 @@ function AddEditOrder() {
     });
   };
 
-  const handleDelete = (ev, index) => {
-    ev.preventDefault();
-    setSelectedProducts(prevState => prevState.filter((_, i) => i !== index));
-    calculateTotalPrice();
+  const handleDelete = (index) => {
+    setSelectedProducts(prevState => {
+      const newSelectedProducts = [...prevState];
+      newSelectedProducts.splice(index, 1);
+      return newSelectedProducts;
+    });
   };
 
-  const handleDeleteExtra = (ev, index) => {
-    ev.preventDefault();
-    setSelectedExtras(prevState => prevState.filter((_, i) => i !== index));
-    calculateTotalPrice();
+  const handleDeleteExtra = (index) => {
+    setSelectedExtras(prevState => {
+      const newSelectedExtras = [...prevState];
+      newSelectedExtras.splice(index, 1);
+      return newSelectedExtras;
+    });
   };
-
-  useEffect(() => {
-    setProducts(data.pizzas.map(product => ({ label: `${product.name} - ${product.size}`, value: product })));
-  }, []);
 
   const handleAddProduct = () => {
     if (selectedProduct) {
       setSelectedProducts(prevState => [...prevState, selectedProduct]);
       setSelectedProduct(null);
-      calculateTotalPrice();
     }
   };
 
@@ -155,7 +162,7 @@ function AddEditOrder() {
     if (selectedExtra) {
       setSelectedExtras(prevState => [...prevState, selectedExtra]);
       setSelectedExtra(null);
-      calculateTotalPrice();
+      calculateTotalPrice(); // Update total when adding an extra
     }
   };
 
@@ -225,7 +232,7 @@ function AddEditOrder() {
                       <Button 
                         icon="pi pi-trash" 
                         className="p-button-rounded p-button-danger" 
-                        onClick={(ev) => handleDelete(ev, index)}
+                        onClick={() => handleDelete(index)}
                       />
                     </td>
                   </tr>
@@ -239,7 +246,7 @@ function AddEditOrder() {
                       <Button 
                         icon="pi pi-trash" 
                         className="p-button-rounded p-button-danger" 
-                        onClick={(ev) => handleDeleteExtra(ev, index)}
+                        onClick={() => handleDeleteExtra(index)}
                       />
                     </td>
                   </tr>
