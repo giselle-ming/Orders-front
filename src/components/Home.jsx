@@ -83,8 +83,8 @@ export default function People() {
                       <p key={index}>{product.name}</p>
                     ))}
                     <div className='flex gap-4'>
-                      <Button icon='pi pi-search-plus' label="Ver Factura" rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/edit`)}/>
-                      <Button icon='pi pi-trash' label="Eliminar" className='btn' style={{ color: 'red' }} rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
+                      <Button icon='pi pi-search-plus' label="Ver Factura" rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/review`)}/>
+                      <Button icon='pi pi-trash' label="Eliminar" className='btn' style={{ background: 'red' }} rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
                     </div>
                   </Card>
                 );
