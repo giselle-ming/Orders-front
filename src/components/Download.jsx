@@ -118,13 +118,14 @@ const styles = {
       <div className="date-inputs">
         <div className="date-input">
           <label htmlFor="startDate">Desde:</label>
-          <Calendar
-            id="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.value)}
-            locale="es"
-            showIcon
-          />
+        <Calendar
+          id="startDate"
+          value={startDate}
+          onChange={(e) => setStartDate(e.value)}
+          locale="es"
+          showIcon
+          firstDayOfWeek={1} // Set the first day of the week to Monday (1)
+        />
         </div>
         <div className="date-input">
           <label htmlFor="endDate">Hasta:</label>
@@ -134,6 +135,7 @@ const styles = {
             onChange={(e) => setEndDate(e.value)}
             locale="es"
             showIcon
+            firstDayOfWeek={1}
           />
         </div>
       </div>
