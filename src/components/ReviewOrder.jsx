@@ -47,12 +47,12 @@ const FacturaPDF = () => (
         <View style={styles.table}>
           <View style={styles.row}>
             <Text style={styles.columnHeader}>Producto</Text>
-            <Text style={styles.columnHeader}>Monto</Text> {/* Changed from Tamaño to Monto */}
+            <Text style={styles.columnHeader}>Monto</Text>
           </View>
           {order && order.products.map((product, index) => (
             <View style={styles.row} key={index}>
-              <Text style={styles.column}>{product.name}</Text>
-              <Text style={styles.column}>{product.price}</Text> {/* Changed from product.size to product.price */}
+              <Text style={styles.leftColumn}>{product.name}</Text>
+              <Text style={styles.rightColumn}>{product.price}</Text>
             </View>
           ))}
           <View style={styles.row}>
@@ -94,13 +94,23 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: '#000',
     borderWidth: 1,
-    padding: 5
+    padding: 5,
+    textAlign: 'center'
   },
-  column: {
+  leftColumn: {
     borderStyle: 'solid',
     borderColor: '#000',
     borderWidth: 1,
-    padding: 5
+    padding: 5,
+    width: '75%'
+  },
+  rightColumn: {
+    borderStyle: 'solid',
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 5,
+    width: '25%',
+    textAlign: 'right'
   },
   totalColumn: {
     backgroundColor: '#f2f2f2',
@@ -114,9 +124,11 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: '#000',
     borderWidth: 1,
-    padding: 5
+    padding: 5,
+    textAlign: 'right'
   }
 });
+
 
   return (
     <>
