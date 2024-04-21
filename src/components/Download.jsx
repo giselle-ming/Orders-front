@@ -125,24 +125,31 @@ const DownloadOrders = () => {
     return totalSales;
   };
 
-  return (
-    <div className="download-orders-container">
-      <h2>Descargar Ordenes</h2>
-      <div className="date-inputs">
-        <div className="date-input">
-          <label htmlFor="startDate">Desde: </label>
-          <Calendar value={startDate} onChange={(e) => setStartDate(e.value)} showIcon />
-        </div>
-        <div className="date-input">
-          <label htmlFor="endDate">Hasta: </label>
-          <Calendar value={endDate} onChange={(e) => setEndDate(e.value)} showIcon />
-        </div>
+return (
+  <div className="download-orders-container">
+    <h2>Descargar Órdenes</h2>
+    <div className="date-inputs">
+      <div className="date-input">
+        <label htmlFor="startDate">Desde: </label>
+        <Calendar value={startDate} onChange={(e) => setStartDate(e.value)} showIcon />
       </div>
-      <div className="button-container">
-        <Button label="Consultar Ordenes" onClick={fetchOrders} />
+      <div className="date-input">
+        <label htmlFor="endDate">Hasta: </label>
+        <Calendar value={endDate} onChange={(e) => setEndDate(e.value)} showIcon />
       </div>
     </div>
-  );
-};
+    <div className="button-container">
+      <Button label="Consultar Ordenes" onClick={fetchOrders} />
+    </div>
+    <div className="download-link-container">
+      <PDFDownloadLink
+        document={generatePDF()}
+        fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
+      >
+        {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
+      </PDFDownloadLink>
+    </div>
+  </div>
+);
 
 export default DownloadOrders;
