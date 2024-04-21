@@ -11,32 +11,28 @@ const DownloadOrders = () => {
   const [orders, setOrders] = useState([]);
   const [token] = useToken(); // Import useToken hook
 
-  // Function to fetch orders between start and end dates
   const fetchOrders = () => {
-    const url = `https://orders-api-dx4t.onrender.com/api/order`;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json'
-      }
+  const url = `https://orders-api-dx4t.onrender.com/api/order`;
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-type': 'application/json'
+    }
+  })
+    .then((resp) => {
+      if (resp.status === 401) throw new Error('Unauthorized access to API.');
+      if (!resp.ok) throw new Error('Invalid response.');
+      return resp.json();
     })
-      .then((resp) => {
-        if (resp.status === 401) throw new Error('Unauthorized access to API.');
-        if (!resp.ok) throw new Error('Invalid response.');
-        return resp.json();
-      })
-      .then((data) => {
-        setOrders(data.data);
-        // Automatically download PDF when orders are fetched
-        downloadPDF();
-      })
-      .catch((error) => {
-        console.warn(error.message);
-      });
-  };
+    .then((data) => {
+      setOrders(data.data);
+    })
+    .catch((error) => {
+      console.warn(error.message);
+    });
+};
 
-  // Function to generate PDF document for orders
 // Function to generate PDF document for orders
 const generatePDF = () => (
   <Document>
@@ -120,6 +116,12 @@ const styles = {
     });
     return totalSales;
   };
+
+  useEffect(() => {
+  if (orders.length > 0) {
+    downloadPDF();
+  }
+  } , [orders]);
 
   return (
     <div className="download-orders-container">
