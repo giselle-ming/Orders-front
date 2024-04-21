@@ -10,13 +10,11 @@ const DownloadOrders = () => {
   const [endDate, setEndDate] = useState(null);
   const [orders, setOrders] = useState([]);
   const [token] = useToken(); // Import useToken hook
-  const [pdfDocument, setPdfDocument] = useState(null);
 
   useEffect(() => {
     if (orders.length > 0) {
-      // Generate PDF when orders are fetched
-      const pdf = generatePDF();
-      setPdfDocument(pdf);
+      // Automatically download PDF when orders are fetched
+      downloadPDF();
     }
   }, [orders, startDate, endDate]);
 
@@ -43,30 +41,80 @@ const DownloadOrders = () => {
   };
 
   // Function to generate PDF document for orders
-  const generatePDF = () => (
-    <Document>
-      <Page style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.title}>Ventas</Text>
-          <View style={styles.table}>
-            <View style={styles.tableRow}>
-              <Text style={styles.columnHeader}>Fecha</Text>
-              <Text style={styles.columnHeader}>Orden</Text>
-              <Text style={styles.columnHeader}>Total</Text>
-            </View>
-            {orders.map((order, index) => (
-              <View style={styles.tableRow} key={index}>
-                <Text style={styles.column}>{new Date(order.date).toLocaleDateString('es')}</Text>
-                <Text style={styles.column}>{order.products.map(product => product.name).join(', ')}</Text>
-                <Text style={styles.column}>{order.total}</Text>
+  const generatePDF = () => {
+    const styles = {
+      page: {
+        flexDirection: 'row',
+        backgroundColor: '#ffffff'
+      },
+      section: {
+        margin: 10,
+        padding: 10,
+        flexGrow: 1
+      },
+      title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10
+      },
+      table: {
+        display: 'table',
+        width: '100%',
+        borderCollapse: 'collapse',
+        marginTop: 10
+      },
+      tableRow: {
+        display: 'table-row',
+      },
+      columnHeader: {
+        backgroundColor: '#f2f2f2',
+        fontWeight: 'bold',
+        border: '1px solid #000',
+        padding: 5
+      },
+      column: {
+        border: '1px solid #000',
+        padding: 5
+      },
+      total: {
+        marginTop: 10,
+        fontWeight: 'bold'
+      }
+    };
+
+    return (
+      <Document>
+        <Page style={styles.page}>
+          <View style={styles.section}>
+            <Text style={styles.title}>Ventas</Text>
+            <View style={styles.table}>
+              <View style={styles.tableRow}>
+                <Text style={styles.columnHeader}>Fecha</Text>
+                <Text style={styles.columnHeader}>Orden</Text>
+                <Text style={styles.columnHeader}>Total</Text>
               </View>
-            ))}
+              {orders.map((order, index) => (
+                <View style={styles.tableRow} key={index}>
+                  <Text style={styles.column}>{new Date(order.date).toLocaleDateString('es')}</Text>
+                  <Text style={styles.column}>{order.products.map(product => product.name).join(', ')}</Text>
+                  <Text style={styles.column}>{order.total}</Text>
+                </View>
+              ))}
+            </View>
+            <Text style={styles.total}>Total Sales: {calculateTotalSales()}</Text>
           </View>
-          <Text style={styles.total}>Total Sales: {calculateTotalSales()}</Text>
-        </View>
-      </Page>
-    </Document>
-  );
+        </Page>
+      </Document>
+    );
+  };
+
+  // Function to download the PDF
+  const downloadPDF = () => {
+    if (orders.length > 0) {
+      const pdf = generatePDF();
+      pdf.save(`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`);
+    }
+  };
 
   // Function to calculate total sales during the period
   const calculateTotalSales = () => {
@@ -92,16 +140,6 @@ const DownloadOrders = () => {
       </div>
       <div className="button-container">
         <Button label="Consultar Ordenes" onClick={fetchOrders} />
-      </div>
-      <div className="download-link-container">
-        {pdfDocument && (
-          <PDFDownloadLink
-            document={pdfDocument}
-            fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
-          >
-            {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
-          </PDFDownloadLink>
-        )}
       </div>
     </div>
   );
