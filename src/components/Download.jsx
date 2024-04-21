@@ -96,11 +96,11 @@ const DownloadOrders = () => {
             <Text style={styles.title}>Ventas</Text>
             <View style={styles.table}>
               <View style={styles.tableRow}>
-                <Text style={styles.columnHeader}>Fecha - ID - Total</Text>
+                <Text style={styles.columnHeader}>Fecha - Total</Text>
               </View>
               {orders.map((order, index) => (
                 <View style={styles.tableRow} key={index}>
-                  <Text style={styles.column}>{new Date(order.date).toLocaleDateString('es')} - {order.id} - {order.total}</Text>
+                  <Text style={styles.column}>{new Date(order.date).toLocaleDateString('es')} - {order.total}</Text>
                 </View>
               ))}
             </View>
@@ -122,7 +122,7 @@ const DownloadOrders = () => {
 
   return (
     <div className="download-orders-container">
-      <h2>Descargar Órdenes</h2>
+      <h2>Descargar Ordenes</h2>
       <div className="date-inputs">
         <div className="date-input">
           <label htmlFor="startDate">Desde: </label>
@@ -135,7 +135,7 @@ const DownloadOrders = () => {
       </div>
       <div className="button-container">
         <Button label="Consultar Ordenes" onClick={fetchOrders} />
-      </div>
+      
       <div className="download-link-container">
         {/* Conditionally render the download link */}
         {showDownloadLink && (
@@ -143,9 +143,10 @@ const DownloadOrders = () => {
             document={generatePDF()}
             fileName={`ordenes-${startDate && startDate.toLocaleDateString('es')}-${endDate && endDate.toLocaleDateString('es')}.pdf`}
           >
-            {({ loading }) => (loading ? 'Cargando...' : 'Descargar Órdenes')}
+            {({ loading }) => (loading ? 'Cargando...' : 'Descargar PDF')}
           </PDFDownloadLink>
         )}
+      </div>
       </div>
     </div>
   );
