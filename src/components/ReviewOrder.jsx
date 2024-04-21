@@ -44,15 +44,15 @@ const FacturaPDF = () => (
       <View style={styles.section}>
         <Text>Detalle de la Orden</Text>
         <Text>Fecha: {order && formatDate(order.date)}</Text>
+        <Text>Numero de orden: {params.id}</Text>
         <View style={styles.table}>
           <View style={styles.row}>
             <Text style={styles.columnHeader}>Producto</Text>
-            <Text style={styles.columnHeader}>Monto</Text>
           </View>
           {order && order.products.map((product, index) => (
             <View style={styles.row} key={index}>
-              <Text style={styles.leftColumn}>{product.name}</Text>
-              <Text style={styles.rightColumn}>{product.price}</Text>
+              <Text style={styles.totalColumn}>{product.name}</Text>
+              <Text style={styles.total}>{product.price}</Text>
             </View>
           ))}
           <View style={styles.row}>
@@ -69,7 +69,6 @@ const FacturaPDF = () => (
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'row',
-    backgroundColor: '#E4E4E4'
   },
   section: {
     margin: 10,
@@ -113,7 +112,6 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   },
   totalColumn: {
-    backgroundColor: '#f2f2f2',
     fontWeight: 'bold',
     borderStyle: 'solid',
     borderColor: '#000',
