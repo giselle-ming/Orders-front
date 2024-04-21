@@ -127,11 +127,11 @@ const styles = {
       <div className="date-inputs">
         <div className="date-input">
           <label htmlFor="startDate">Desde: </label>
-          <Calendar value={startDate} onChange={(e) => setDate(e.value)} showIcon />
+          <Calendar value={startDate} onChange={(e) => setStartDate(e.value)} showIcon />
         </div>
         <div className="date-input">
           <label htmlFor="endDate">Hasta: </label>
-          <Calendar value={endDate} onChange={(e) => setDate(e.value)} showIcon />
+          <Calendar value={endDate} onChange={(e) => setEndDate(e.value)} showIcon />
         </div>
       </div>
       <div className="button-container">
