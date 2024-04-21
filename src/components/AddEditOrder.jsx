@@ -206,7 +206,7 @@ function AddEditOrder() {
               <Dropdown 
                 id="order_extras" 
                 value={selectedExtra} 
-                options={data.options.extras.map(extra => ({ label: extra.name, value: extra }))} 
+                options={data.options.extras ? data.options.extras.map(extra => ({ label: extra.name, value: extra })) : []} 
                 onChange={(e) => {
                   setSelectedExtra(e.value);
                 }} 
