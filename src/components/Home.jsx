@@ -14,7 +14,11 @@ export default function People() {
   const [token, setToken] = useToken();
   const navigate = useNavigate();
 
-    const deleteOrder = (orderId) => {
+  const deleteOrder = (orderId) => {
+    // Function to delete the order
+    const confirmDelete = window.confirm("Are you sure you want to delete this order?");
+    if (!confirmDelete) return; // If user cancels, exit
+
     const url = `https://orders-api-dx4t.onrender.com/api/order/${orderId}`;
     fetch(url, {
       method: 'DELETE',
@@ -79,8 +83,8 @@ export default function People() {
                       <p key={index}>{product.name}</p>
                     ))}
                     <div className='flex gap-4'>
-                      <Button icon='pi pi-search-plus' rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/edit`)}/>
-                      <Button icon='pi pi-trash' className='btn' rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
+                      <Button icon='pi pi-search-plus' label="Ver Factura" rounded severity="secondary" raised onClick={(ev) => navigate(`/order/${order._id}/edit`)}/>
+                      <Button icon='pi pi-trash' label="Eliminar" className='btn' style={{ color: 'red' }} rounded severity="secondary" raised onClick={(ev) => deleteOrder(order._id)}/>
                     </div>
                   </Card>
                 );
