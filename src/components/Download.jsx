@@ -48,68 +48,68 @@ const DownloadOrders = () => {
       });
   };
 
-const generatePDF = () => {
-  const styles = {
-    page: {
-      flexDirection: 'row',
-      backgroundColor: '#fff',
-      padding: 20
-    },
-    section: {
-      flexGrow: 1,
-      marginBottom: 20
-    },
-    title: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 10
-    },
-    table: {
-      display: 'table',
-      width: '100%',
-      borderCollapse: 'collapse'
-    },
-    tableRow: {
-      display: 'table-row'
-    },
-    columnHeader: {
-      backgroundColor: '#f2f2f2',
-      fontWeight: 'bold',
-      border: '1px solid #000',
-      padding: 8
-    },
-    column: {
-      border: '1px solid #000',
-      padding: 8
-    },
-    total: {
-      fontWeight: 'bold',
-      marginTop: 10
-    }
-  };
+  // Function to generate PDF document for orders
+  const generatePDF = () => {
+    const styles = {
+      page: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        padding: 20
+      },
+      section: {
+        flexGrow: 1,
+        marginBottom: 20
+      },
+      title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10
+      },
+      table: {
+        display: 'table',
+        width: '100%',
+        borderCollapse: 'collapse'
+      },
+      tableRow: {
+        display: 'table-row'
+      },
+      columnHeader: {
+        backgroundColor: '#f2f2f2',
+        fontWeight: 'bold',
+        border: '1px solid #000',
+        padding: 8
+      },
+      column: {
+        border: '1px solid #000',
+        padding: 8
+      },
+      total: {
+        fontWeight: 'bold',
+        marginTop: 10
+      }
+    };
 
-  return (
-    <Document>
-      <Page style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.title}>Ventas</Text>
-          <View style={styles.table}>
-            <View style={styles.tableRow}>
-              <Text style={styles.columnHeader}>Fecha - ID - Total</Text>
-            </View>
-            {orders.map((order, index) => (
-              <View style={styles.tableRow} key={index}>
-                <Text style={styles.column}>{new Date(order.date).toLocaleDateString('es')} - {order._id} - {order.total}</Text>
+    return (
+      <Document>
+        <Page style={styles.page}>
+          <View style={styles.section}>
+            <Text style={styles.title}>Ventas</Text>
+            <View style={styles.table}>
+              <View style={styles.tableRow}>
+                <Text style={styles.columnHeader}>Fecha - ID - Total</Text>
               </View>
-            ))}
+              {orders.map((order, index) => (
+                <View style={styles.tableRow} key={index}>
+                  <Text style={styles.column}>{new Date(order.date).toLocaleDateString('es')} - {order.id} - {order.total}</Text>
+                </View>
+              ))}
+            </View>
+            <Text style={styles.total}>Total Sales: {calculateTotalSales()}</Text>
           </View>
-          <Text style={styles.total}>Total Vendido entre {startDate} - {endDate}: {calculateTotalSales()}</Text>
-        </View>
-      </Page>
-    </Document>
-  );
-};
-
+        </Page>
+      </Document>
+    );
+  };
 
   // Function to calculate total sales during the period
   const calculateTotalSales = () => {
