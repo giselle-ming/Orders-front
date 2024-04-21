@@ -52,6 +52,7 @@ const FacturaPDF = () => (
           {order && order.products.map((product, index) => (
             <View style={styles.row} key={index}>
               <Text style={styles.totalColumn}>{product.name}</Text>
+              <Text style={styles.total}>{product.size}</Text>
               <Text style={styles.total}>{product.price}</Text>
             </View>
           ))}
